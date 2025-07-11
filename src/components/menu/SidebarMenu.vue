@@ -11,7 +11,10 @@
         </div>
         <div class="sidebar-menu-bottom">
             <sidebar-menu-item :menu-state="'settings'" tooltip="Settings (X)" icon-class="fas fa-gear" />
-            <sidebar-menu-item :menu-state="'help'" tooltip="How to Use" icon-class="fa-regular fa-circle-question" />
+            <a title="How to Use" href="https://github.com/IHateAttackMaps/solaris-custom-galaxy-editor/wiki/How-To-Use"
+                target="_blank">
+                <i class="fa-regular fa-circle-question"></i>
+            </a>
         </div>
     </div>
 </template>

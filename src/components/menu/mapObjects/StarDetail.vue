@@ -344,7 +344,7 @@ export default {
             selectedCapitalOwner: null as string | null,
             selectedSpecialist: null as number | null,
             selectionPlayers: helper.selectionPlayers(),
-            selectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().$state.star),
+            selectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().getValidStarSpecialists()),
             editingId: false,
             deleteStarModal: null as Modal | null,
             modalText: undefined as string | undefined,

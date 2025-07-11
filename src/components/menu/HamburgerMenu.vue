@@ -37,7 +37,8 @@
                 <i class="fas fa-cog"></i>
                 Settings
             </a>
-            <a class="dropdown-item" v-on:click="setMenu('help')" title="How to Use">
+            <a class="dropdown-item" title="How to Use"
+                href="https://github.com/IHateAttackMaps/solaris-custom-galaxy-editor/wiki/How-To-Use" target="_blank">
                 <i class="fa-regular fa-circle-question"></i>
                 How to Use
             </a>

@@ -847,6 +847,12 @@ export const useSpecialistsStore = defineStore({
         getStarSpecialistById(id: number) {
             const starSpecialists = this.$state.star.filter((s) => s.id === id);
             return starSpecialists.find((c) => c.id === id);
+        },
+        getValidStarSpecialists() {
+            return this.$state.star.filter((s) => s.active.custom === true);
+        },
+        getValidCarrierSpecialists() {
+            return this.$state.carrier.filter((c) => c.active.custom === true);
         }
     }
 });

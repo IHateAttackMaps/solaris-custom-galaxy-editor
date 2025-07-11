@@ -328,7 +328,7 @@ export default {
             selectedPlayer: '',
             selectedSpecialist: null as number | null,
             selectionPlayers: helper.selectionPlayers(false),
-            selectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().$state.carrier),
+            selectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().getValidCarrierSpecialists()),
             editingId: false,
             deleteCarrierModal: null as Modal | null,
             modalText: undefined as string | undefined,

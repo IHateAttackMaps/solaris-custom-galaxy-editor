@@ -9,7 +9,6 @@ export const MenuStates = [
     'ruler',
     'select',
     'brush',
-    'help',
     'transform',
     'randomise',
     'json'

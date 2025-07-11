@@ -882,8 +882,8 @@ export default {
         return {
             settings: JSON.parse(JSON.stringify(storage.getSettings())) as Settings,
             errors: [] as Array<string>,
-            starSelectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().$state.star),
-            carrierSelectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().$state.carrier)
+            starSelectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().getValidStarSpecialists()),
+            carrierSelectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().getValidCarrierSpecialists())
         }
     },
     methods: {

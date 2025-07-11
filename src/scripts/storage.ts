@@ -19,7 +19,6 @@ class StorageService {
         }
         try {
             this.settings = JSON.parse(json) as Settings;
-            //this.settings = this.loadDefaultSettings(); // Use this when adding new settings
         } catch (e) {
             throw new Error("Could not parse settings!");
         }
@@ -45,7 +44,7 @@ class StorageService {
                     }
                 },
                 resourcesRingOpacity: 0.1,
-                displayGalaxyCenter: 'centroid',
+                displayGalaxyCenter: 'midpoint',
                 displayScaleBar: 'enabled',
                 displayCursorCoordinates: 'enabled',
                 carrierPathWidth: 1,
@@ -152,7 +151,7 @@ class StorageService {
                 confirmTransferPlayers: 'enabled'
             },
             technical: {
-                performanceMonitor: 'enabled',
+                performanceMonitor: 'disabled',
                 chunkVisualizer: 'disabled'
             }
         } as Settings

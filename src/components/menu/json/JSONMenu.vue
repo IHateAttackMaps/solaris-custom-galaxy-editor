@@ -76,14 +76,14 @@ export default {
     methods: {
         clearInput() {
             this.input = '';
-            this.errors = [];
-            this.warnings = [];
+            this.errors.length = 0;
+            this.warnings.length = 0;
             this.json = {};
         },
         loadFromJSON() {
             if (!useGalaxyStore().$state.galaxyIsReady) return;
-            this.errors = [];
-            this.warnings = [];
+            this.errors.length = 0;
+            this.warnings.length = 0;
             try {
                 if (this.input == null || this.input.length === 0) {
                     this.errors.push(`The provided input is empty. To generate an empty galaxy, use '{}' instead.`);
@@ -203,26 +203,15 @@ export default {
 
                         for (const parsedStar of homeStars) {
                             const index = homeStars.indexOf(parsedStar);
-                            const player = {
-                                id: (index + 1).toString(),
-                                homeStarId: parsedStar.id,
-                                alias: `Player ${index + 1}`,
-                                colour: combos[index].colour,
-                                shape: combos[index].shape,
-                                technologies: {
-                                    scanning: 1,
-                                    hyperspace: 1,
-                                    terraforming: 1,
-                                    experimentation: 1,
-                                    weapons: 1,
-                                    banking: 1,
-                                    manufacturing: 1,
-                                    specialists: 1
-                                },
-                                credits: 1000,
-                                creditsSpecialists: 10
-                            };
-                            players.push(player);
+
+                            const generatedPlayer = helper.generateNewPlayer();
+                            generatedPlayer.id = (index + 1).toString();
+                            generatedPlayer.colour = combos[index].colour;
+                            generatedPlayer.shape = combos[index].shape;
+                            generatedPlayer.homeStarId = parsedStar.id;
+                            generatedPlayer.alias = `Player ${index + 1}`;
+                            
+                            players.push(generatedPlayer);
                         }
                     }
 
@@ -288,24 +277,15 @@ export default {
 
                         for (const parsedStar of homeStars) {
                             const index = homeStars.indexOf(parsedStar);
-                            const player = {
-                                id: (index + 1).toString(),
-                                homeStarId: parsedStar.id,
-                                alias: `Player ${index + 1}`,
-                                colour: combos[index].colour,
-                                shape: combos[index].shape,
-                                technologies: {
-                                    scanning: 1,
-                                    hyperspace: 1,
-                                    terraforming: 1,
-                                    experimentation: 1,
-                                    weapons: 1,
-                                    banking: 1,
-                                    manufacturing: 1,
-                                    specialists: 1
-                                }
-                            } as Player;
-                            players.push(player);
+
+                            const generatedPlayer = helper.generateNewPlayer();
+                            generatedPlayer.id = (index + 1).toString();
+                            generatedPlayer.colour = combos[index].colour;
+                            generatedPlayer.shape = combos[index].shape;
+                            generatedPlayer.homeStarId = parsedStar.id;
+                            generatedPlayer.alias = `Player ${index + 1}`;
+
+                            players.push(generatedPlayer);
                         }
 
                     } else {
@@ -436,8 +416,13 @@ export default {
         },
         generateJSON() {
             if (!useGalaxyStore().$state.galaxyIsReady) return;
-            this.errors = [];
-            this.warnings = [];
+            this.errors.length = 0;
+            this.warnings.length = 0;
+
+            const galaxy = useGalaxyStore().$state.galaxy;
+            const numCapitals = galaxy.stars.filter(s => s.homeStar).length;
+            const numPlayers = galaxy.players.length;
+            if (numCapitals !== numPlayers) this.warnings.push(`The number of capital stars does not match the number of players.`);
 
             // Output JSON structure is 'editor_this'.
             this.input = JSON.stringify(useGalaxyStore().$state.galaxy);
@@ -729,8 +714,8 @@ export default {
                 technologies.specialists = player.technologies?.specialists == null ? 1 : player.technologies.specialists; // min: 0
             }
 
-            player.credits = player.credits == null ? null : player.credits;
-            player.creditsSpecialists = player.creditsSpecialists == null ? null : player.creditsSpecialists;
+            player.credits = player.credits == null ? 0 : player.credits;
+            player.creditsSpecialists = player.creditsSpecialists == null ? 0 : player.creditsSpecialists;
 
             if (jsonStructure === 'solaris_game') {
                 if (!this.checkPlayerProperty(player, '_id', 'string')) return;

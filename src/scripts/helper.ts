@@ -768,6 +768,32 @@ class HelperService {
         }
     }
 
+    generateNewPlayer(): Player {
+        const playerSettings = storage.getSettings().players;
+
+        return {
+            id: 'null',
+            homeStarId: null,
+            colour: {
+                alias: 'null',
+                value: '#ffffff'
+            },
+            shape: 'circle',
+            technologies: {
+                scanning: playerSettings.newTechnology.scanning,
+                hyperspace: playerSettings.newTechnology.hyperspace,
+                terraforming: playerSettings.newTechnology.terraforming,
+                experimentation: playerSettings.newTechnology.experimentation,
+                weapons: playerSettings.newTechnology.weapons,
+                banking: playerSettings.newTechnology.banking,
+                manufacturing: playerSettings.newTechnology.manufacturing,
+                specialists: playerSettings.newTechnology.specialists
+            },
+            credits: playerSettings.newCredits,
+            creditsSpecialists: playerSettings.newCreditsSpecialists
+        };
+    }
+
     randomIntBetween(min: number, max: number) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }

@@ -275,22 +275,10 @@ export default {
                 };
             }
 
-            const newPlayer = {
-                id: `${useGalaxyStore().getLowestValidPlayerId()}`,
-                homeStarId: null,
-                colour: combo.colour,
-                shape: combo.shape,
-                technologies: {
-                    scanning: 1,
-                    hyperspace: 1,
-                    terraforming: 1,
-                    experimentation: 1,
-                    weapons: 1,
-                    banking: 1,
-                    manufacturing: 1,
-                    specialists: 1
-                }
-            } as Player;
+            const newPlayer = helper.generateNewPlayer();
+            newPlayer.id = `${useGalaxyStore().getLowestValidPlayerId()}`;
+            newPlayer.colour = combo.colour;
+            newPlayer.shape = combo.shape;
 
             useGalaxyStore().addPlayer(newPlayer);
 

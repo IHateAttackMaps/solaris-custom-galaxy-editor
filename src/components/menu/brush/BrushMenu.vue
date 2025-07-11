@@ -86,7 +86,7 @@
             </div>
             <div class="row pt-2 pb-2 mt-1 bg-dark-custom" v-if="snapTargetMode !== 'none'">
                 <div class="col col-flex align-center">
-                    Snap Radius
+                    Snap Radius (ly)
                 </div>
                 <div class="col">
                     <input id="snapRadius" class="form-control hidden-number large-input" type="number" min="0"
@@ -307,6 +307,7 @@ export default {
                 case 'none':
                     editor.map!.disableStarsInteractivity();
                     this.snapTarget = undefined;
+                    this.onSnapChanged();
                     break;
                 case 'manual':
                     editor.map!.disableStarsInteractivity();

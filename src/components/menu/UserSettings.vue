@@ -258,6 +258,91 @@
                 </div>
             </collapse-panel>
 
+            <collapse-panel title="Players" :starts-expanded="true">
+                <div class="row pt-1 pb-1">
+                    <label for="" class="col col-form-label">New Player Values</label>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newScanning" class="col-12 col-sm-6 col-form-label sub-option-label">Scanning Technology
+                        Level</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="1" step="1" class="form-control" id="newScanning"
+                            v-model="settings.players.newTechnology.scanning" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newHyperspace" class="col-12 col-sm-6 col-form-label sub-option-label">Hyperspace
+                        Technology Level</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="1" step="1" class="form-control" id="newHyperspace"
+                            v-model="settings.players.newTechnology.hyperspace" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newTerraforming" class="col-12 col-sm-6 col-form-label sub-option-label">Terraforming
+                        Technology Level</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="1" step="1" class="form-control" id="newTerraforming"
+                            v-model="settings.players.newTechnology.terraforming" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newExperimentation"
+                        class="col-12 col-sm-6 col-form-label sub-option-label">Experimentation Technology Level</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="0" step="1" class="form-control" id="newExperimentation"
+                            v-model="settings.players.newTechnology.experimentation" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newWeapons" class="col-12 col-sm-6 col-form-label sub-option-label">Weapons Technology
+                        Level</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="1" step="1" class="form-control" id="newWeapons"
+                            v-model="settings.players.newTechnology.weapons" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newBanking" class="col-12 col-sm-6 col-form-label sub-option-label">Banking Technology
+                        Level</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="0" step="1" class="form-control" id="newBanking"
+                            v-model="settings.players.newTechnology.banking" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newManufacturing" class="col-12 col-sm-6 col-form-label sub-option-label">Manufacturing
+                        Technology Level</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="1" step="1" class="form-control" id="newManufacturing"
+                            v-model="settings.players.newTechnology.manufacturing" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newSpecialists" class="col-12 col-sm-6 col-form-label sub-option-label">Specialists
+                        Technology Level</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="0" step="1" class="form-control" id="newSpecialists"
+                            v-model="settings.players.newTechnology.specialists" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newCredits" class="col-12 col-sm-6 col-form-label sub-option-label">Credits</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="0" step="1" class="form-control" id="newCredits"
+                            v-model="settings.players.newCredits" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="newCreditsSpecialists"
+                        class="col-12 col-sm-6 col-form-label sub-option-label">Specialist Tokens</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="1" step="1" class="form-control" id="newCreditsSpecialists"
+                            v-model="settings.players.newCreditsSpecialists" />
+                    </div>
+                </div>
+            </collapse-panel>
+
             <collapse-panel title="Brush" :starts-expanded="true">
                 <div class="row pt-1 pb-1">
                     <label for="defaultBrushShape" class="col-12 col-sm-6 col-form-label">Default Brush

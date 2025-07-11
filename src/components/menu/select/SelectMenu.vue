@@ -36,7 +36,7 @@
                         <i class="fas fa-up-down-left-right"></i>
                     </button>
                 </div>
-                <div class="col col-auto me-2" v-if="action === 'selecting' && selection.length > 0 && canMoveStars">
+                <div class="col col-auto me-2" v-if="action === 'selecting' && selection.length > 0">
                     <button class="btn btn-sm btn-primary" title="Transform selected" @click="openTransformMenu()">
                         <i class="fas fa-arrows-spin"></i>
                     </button>
@@ -56,16 +56,16 @@
                         <i class="fas fa-check"></i>
                     </button>
                 </div>
-                <div class="col col-auto me-2" v-if="action === 'moving'">
-                    <button class="btn btn-sm btn-outline-primary" :class="{ active: isCopy }" title="Toggle copy"
-                        @click="toggleCopy()">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                </div>
                 <div class="col col-auto me-2" v-if="action === 'moving' && isCopy">
                     <button class="btn btn-sm btn-outline-primary" :class="{ active: copyCarriers }"
                         title="Toggle copy carriers" @click="copyCarriers = !copyCarriers">
                         <i class="fas fa-rocket"></i>
+                    </button>
+                </div>
+                <div class="col col-auto me-2" v-if="action === 'moving'">
+                    <button class="btn btn-sm btn-outline-primary" :class="{ active: isCopy }" title="Toggle copy"
+                        @click="toggleCopy()">
+                        <i class="fas fa-copy"></i>
                     </button>
                 </div>
                 <div class="col col-auto me-2" v-if="action === 'moving'">
@@ -271,7 +271,7 @@ export default {
             const affectedCarriers = helper.getStarTranslationAffectedCarriers(starIds);
             const selectionOrbitingCarriers = affectedCarriers.filter(ac => ac.carrier.orbiting != null && starIds.has(ac.carrier.orbiting)).map(ac => ac.carrier);
 
-            const newWormHoleStars: {newStar: Star, oldId: string}[] = [];
+            const newWormHoleStars: { newStar: Star, oldId: string }[] = [];
             for (const star of this.selection) {
                 let pos = { x: star.location.x + e.offset.x, y: star.location.y + e.offset.y }; // Calculate position after selection offset
                 pos = helper.getLocalLocation(pos, e.endPosition); // Calculate local position before rotation
@@ -288,7 +288,7 @@ export default {
                         if (targetIndex === -1) {
                             newStar.wormHoleToStarId = null;
                         } else {
-                            newWormHoleStars.push({newStar: newStar, oldId: star.id});
+                            newWormHoleStars.push({ newStar: newStar, oldId: star.id });
                         }
                     }
 

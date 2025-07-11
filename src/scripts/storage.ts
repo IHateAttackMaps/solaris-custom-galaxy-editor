@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Settings } from "./types/Settings";
 
 class StorageService {
@@ -64,6 +63,20 @@ class StorageService {
                 selectionMoveBoundOpacity: 0.8,
                 selectionMoveFillOpacity: 0.1,
                 selectionMovePointOpacity: 1
+            },
+            players: {
+                newCredits: 500,
+                newCreditsSpecialists: 5,
+                newTechnology: {
+                    scanning: 1,
+                    hyperspace: 1,
+                    terraforming: 1,
+                    experimentation: 1,
+                    weapons: 1,
+                    banking: 1,
+                    manufacturing: 1,
+                    specialists: 1
+                }
             },
             brush: {
                 defaultBrushShape: 'circle',

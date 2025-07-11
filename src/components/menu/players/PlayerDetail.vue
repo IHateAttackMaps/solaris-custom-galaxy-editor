@@ -81,14 +81,25 @@
                     <div class="col col-flex align-center">
                         <i class="fas fa-dollar-sign me-1" id="creditsIcon"></i>
                         <p>Credits:</p>
-                        <input id="credits" class="form-control hidden-number small-input ms-1 me-3" type="number" min="0" step="1"
-                            v-model="playerData.credits" />
+                        <input id="credits" class="form-control hidden-number small-input ms-1 me-3" type="number"
+                            min="0" step="1" required="true" v-model="playerData.credits" />
                     </div>
                     <div class="col col-flex align-center">
                         <i class="fas fa-coins me-1" id="specTokensIcon"></i>
                         <p>Tokens:</p>
                         <input id="specialistTokens" class="form-control hidden-number small-input ms-1" type="number"
-                            min="0" step="1" v-model="playerData.creditsSpecialists" />
+                            min="0" step="1" required="true" v-model="playerData.creditsSpecialists" />
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col col-flex align-center">
+                        <i class="fas fa-house me-1"></i>
+                        <p>Capital Star:</p>
+                        <input id="specialistTokens" class="form-control semi-small-input ms-1 me-1"
+                            type="text" v-model="playerData.homeStarId"
+                            :placeholder="'Enter capital star ID here'" ref="homeStarIdInputElement" />
+                        <button type="button" class="btn btn-outline-primary btn-ssm" @click="toggleHomeStarSelectMode"
+                            :class="{ active: inHomeStarSelectMode }"><i class="fas fa-hand-pointer"></i></button>
                     </div>
                 </div>
                 <div class="row pt-2 pb-2">
@@ -237,7 +248,7 @@ import helper from '@/scripts/helper';
 import MenuTitle from '../MenuTitle.vue';
 import ChangeFieldMenu from '../ChangeFieldMenu.vue';
 import ConfirmationModal from '@/components/modal/ConfirmationModal.vue';
-import type { Player, PlayerColour } from '@/scripts/types/Player';
+import type { Player } from '@/scripts/types/Player';
 import { useGalaxyStore } from '@/stores/galaxy';
 import storage from '@/scripts/storage';
 import { Modal } from 'bootstrap';
@@ -245,6 +256,7 @@ import editor from '@/scripts/editor';
 import PlayerShapeIcon from '../icons/PlayerShapeIcon.vue';
 import type { PlayerShape } from '@/scripts/types/Player';
 import { useMenuStateStore } from '@/stores/menuState';
+import type { Star } from '@/scripts/types/Star';
 
 export default {
     components: {
@@ -280,7 +292,8 @@ export default {
             deletePlayerModal: null as any,
             modalText: undefined as string | undefined,
             changeIdErrors: [] as string[],
-            errors: [] as string[]
+            errors: [] as string[],
+            inHomeStarSelectMode: false
         }
     },
     methods: {
@@ -307,11 +320,48 @@ export default {
 
             this.$toast.default(`Changed player ID to ${this.playerData.id}.`);
         },
+        toggleHomeStarSelectMode() {
+            if (this.inHomeStarSelectMode) {
+                this.inHomeStarSelectMode = false;
+                useGalaxyStore().clearClickCallbacks();
+                return;
+            }
+            this.inHomeStarSelectMode = true;
+            const ref = this.$refs.homeStarIdInputElement;
+            useGalaxyStore().setClickCallback({
+                ref,
+                callbacks: {
+                    star: (star: Star) => {
+                        this.playerData.homeStarId = star.id;
+                        useGalaxyStore().clearClickCallbacks();
+                        this.inHomeStarSelectMode = false;
+                    }
+                }
+            });
+        },
         updatePlayer() {
             if (!this.validatePlayer()) return;
 
             const playerCarriers = helper.getPlayerCarriers(this.playerData.id);
             const playerStars = helper.getPlayerStars(this.playerData.id);
+
+            if (this.player == null) throw new Error(`Updating non-existent player (id: ${this.playerId})!`);
+            const oldCapitalStar = this.galaxy.stars.find(s => s.id === this.player!.homeStarId);
+            const newCapitalStar = this.galaxy.stars.find(s => s.id === this.playerData.homeStarId);
+
+            if (oldCapitalStar != null) {
+                if (newCapitalStar == null || oldCapitalStar.id !== newCapitalStar.id) {
+                    oldCapitalStar.homeStar = false;
+                    editor.reloadStar(oldCapitalStar);
+                }
+            }
+            if (newCapitalStar != null) {
+                const previousPlayer = this.galaxy.players.find(p => p.homeStarId === newCapitalStar.id);
+                if (previousPlayer != null) previousPlayer.homeStarId = null;
+
+                newCapitalStar.homeStar = true;
+                editor.reloadStar(newCapitalStar);
+            }
 
             useGalaxyStore().updatePlayer(this.playerData);
 
@@ -391,8 +441,12 @@ export default {
         validatePlayer() {
             if (this.errors.length !== 0) this.errors.length = 0;
 
-            if ((this.playerData.credits as any) === '') this.playerData.credits = undefined;
-            if ((this.playerData.creditsSpecialists as any) === '') this.playerData.creditsSpecialists = undefined;
+            if ((this.playerData.homeStarId as any) === '') this.playerData.homeStarId = null;
+            if (this.playerData.homeStarId != null) {
+                if (this.galaxy.stars.find(s => s.id === this.playerData.homeStarId) == null) {
+                    this.errors.push(`Invalid capital star ID.`);
+                }
+            }
 
             if (!(/^#([0-9A-F]{3}){1,2}$/i.test(this.playerData.colour.value))) {
                 this.errors.push(`Player colour must be a valid HEX code in RGB format.`);
@@ -404,6 +458,9 @@ export default {
     },
     mounted() {
         this.playerData = JSON.parse(JSON.stringify(this.player));
+    },
+    beforeUnmount() {
+        useGalaxyStore().clearClickCallbacks();
     },
     computed: {
         galaxy: function () {

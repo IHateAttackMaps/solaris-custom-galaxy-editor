@@ -22,7 +22,7 @@ export interface Player {
     alias?: string;
     colour: PlayerColour;
     shape: PlayerShape;
-    credits?: number;
-    creditsSpecialists?: number;
+    credits: number;
+    creditsSpecialists: number;
     technologies: PlayerTechnologyLevels;
 }

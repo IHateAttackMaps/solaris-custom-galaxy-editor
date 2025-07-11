@@ -38,6 +38,20 @@ export interface Settings {
         selectionMoveFillOpacity: number,
         selectionMovePointOpacity: number
     },
+    players: {
+        newCredits: number,
+        newCreditsSpecialists: number,
+        newTechnology: {
+            scanning: number,
+            hyperspace: number,
+            terraforming: number,
+            experimentation: number,
+            weapons: number,
+            banking: number,
+            manufacturing: number,
+            specialists: number
+        }
+    },
     brush: {
         defaultBrushShape: 'circle' | 'square',
         defaultBrushRadius: number,

@@ -320,7 +320,7 @@ export default {
                 ships: NaN,
                 specialistId: null,
                 specialistExpireTick: null,
-                specialist: null,
+                specialist: undefined,
                 isGift: false,
                 waypoints: [] as CarrierWaypoint[],
                 playerId: ''
@@ -346,8 +346,9 @@ export default {
         },
         onSpecialistChanged() {
             if (this.selectedSpecialist == null) {
-                this.carrierData.specialist = null;
+                this.carrierData.specialist = undefined;
                 this.carrierData.specialistId = null;
+                this.carrierData.specialistExpireTick = null;
                 return;
             }
             this.carrierData.specialist = useSpecialistsStore().getCarrierSpecialistById(this.selectedSpecialist);

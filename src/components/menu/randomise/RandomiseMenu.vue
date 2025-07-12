@@ -44,7 +44,7 @@
             </div>
             <div class="row mb-1" v-if="!isSplitNR">
                 <div class="col col-3 text-center me-2">
-                    Values:
+                    Value:
                 </div>
                 <div class="col me-2">
                     <input id="minNR" class="form-control hidden-number" type="number" min="0" step="1" :max="maxNR"
@@ -700,7 +700,7 @@ export default {
         updateStarForNRChange(star: Star) {
             if (helper.isDeadStar(star)) {
                 star.warpGate = false;
-                star.specialist = null;
+                star.specialist = undefined;
                 star.specialistExpireTick = null;
             }
             editor.reloadStar(star);

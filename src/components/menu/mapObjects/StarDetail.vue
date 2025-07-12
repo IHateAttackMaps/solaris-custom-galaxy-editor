@@ -51,14 +51,9 @@
                             <p class="text-danger">This is a dead star.</p>
                         </div>
                     </div>
-                    <div class="row pt-2" v-if="starData.targeted">
-                        <div class="col text-center">
-                            <p class="text-danger">This star has been targeted for destruction!</p>
-                        </div>
-                    </div>
                     <div class="row pt-2" v-if="starData.isKingOfTheHillStar">
                         <div class="col text-center">
-                            <p class="text-danger">Capture and hold this star to win!</p>
+                            <p>This is the King Of The Hill star.</p>
                         </div>
                     </div>
                 </div>
@@ -334,8 +329,7 @@ export default {
                 wormHoleToStarId: null,
                 infrastructure: { economy: NaN, industry: NaN, science: NaN },
                 isKingOfTheHillStar: false,
-                specialist: null,
-                targeted: false,
+                specialist: undefined,
                 manufacturing: NaN
             } as Star,
             creatingWormhole: false,
@@ -411,8 +405,9 @@ export default {
         },
         onSpecialistChanged() {
             if (this.selectedSpecialist == null) {
-                this.starData.specialist = null;
+                this.starData.specialist = undefined;
                 this.starData.specialistId = null;
+                this.starData.specialistExpireTick = null;
                 return;
             }
             this.starData.specialist = useSpecialistsStore().getStarSpecialistById(this.selectedSpecialist);
@@ -615,7 +610,7 @@ export default {
         isDeadStar: function () {
             const isDead = helper.isDeadStar(this.starData);
             if (isDead) {
-                this.starData.specialist = null;
+                this.starData.specialist = undefined;
                 this.selectedSpecialist = null;
                 this.starData.specialistExpireTick = null;
                 this.starData.infrastructure.economy = 0;

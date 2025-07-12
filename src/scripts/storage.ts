@@ -1,6 +1,8 @@
 import type { Settings } from "./types/Settings";
 
 class StorageService {
+    static currentVersion = 1; // Increment when adding new settings
+
     settings = {} as Settings;
 
     saveSettings(settings: Settings) {
@@ -19,6 +21,11 @@ class StorageService {
         }
         try {
             this.settings = JSON.parse(json) as Settings;
+
+            if (!this.settings.version || this.settings.version < StorageService.currentVersion) {
+                // Reset stored data when new settings have been added to avoid errors
+                this.settings = this.loadDefaultSettings();
+            }
         } catch (e) {
             throw new Error("Could not parse settings!");
         }
@@ -26,6 +33,7 @@ class StorageService {
 
     loadDefaultSettings() {
         return {
+            version: StorageService.currentVersion,
             visual: {
                 resources: 'numbers',
                 objectScaling: 'default',

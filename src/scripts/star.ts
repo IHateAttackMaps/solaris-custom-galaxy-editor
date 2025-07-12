@@ -34,7 +34,6 @@ class StarObject extends EventEmitter {
     graphics_natural_resources_ring;
     graphics_scanningRange;
     graphics_star: Sprite;
-    graphics_targeted;
     graphics_selected;
     graphics_kingOfTheHill;
     planets: Planet[] | null;
@@ -88,7 +87,6 @@ class StarObject extends EventEmitter {
         this.graphics_natural_resources_ring = new Array(StarObject.maxLod);
         this.graphics_scanningRange = new Graphics();
         this.graphics_star = new Sprite();
-        this.graphics_targeted = new Graphics();
         this.graphics_selected = new Graphics();
         this.graphics_kingOfTheHill = new Graphics();
         this.pulsarGraphics = null;
@@ -108,7 +106,6 @@ class StarObject extends EventEmitter {
         this.container.addChild(this.graphics_shape_full);
         this.container.addChild(this.graphics_shape_part_warp);
         this.container.addChild(this.graphics_shape_full_warp);
-        this.container.addChild(this.graphics_targeted);
         this.container.addChild(this.graphics_selected);
         this.container.addChild(this.graphics_kingOfTheHill);
 
@@ -214,7 +211,6 @@ class StarObject extends EventEmitter {
         this.drawPulsar();
         this.drawNebula();
         this.drawAsteroidField();
-        this.drawTarget();
         this.drawSelectedCircle();
         this.drawStar();
         this.drawSpecialist();
@@ -844,19 +840,6 @@ class StarObject extends EventEmitter {
         graphics.star!(0, 0, radius, radius, radius - 3);
     }
 
-    drawTarget() {
-        this.graphics_targeted.clear();
-
-        if (this.data!.targeted) {
-            this.graphics_targeted.moveTo(9, -9);
-            this.graphics_targeted.lineTo(-9, 9);
-            this.graphics_targeted.moveTo(-9, -9);
-            this.graphics_targeted.lineTo(9, 9);
-            this.graphics_targeted.closePath();
-            this.graphics_targeted.stroke({ width: 2, color: 0xFF0000 });
-        }
-    }
-
     drawSelectedCircle(force: boolean = false) {
         this.graphics_selected.clear();
 
@@ -877,9 +860,9 @@ class StarObject extends EventEmitter {
         this.graphics_kingOfTheHill.clear();
 
         if (this.data!.isKingOfTheHillStar) {
-            this.graphics_kingOfTheHill.alpha = 0.5;
-            this.graphics_kingOfTheHill.circle(0, 0, 20);
-            this.graphics_kingOfTheHill.stroke({ width: 0.5, color: 0xFFFFFF });
+            this.graphics_kingOfTheHill.alpha = 1;
+            this.graphics_kingOfTheHill.circle(0, 0, 22.5);
+            this.graphics_kingOfTheHill.stroke({ width: 0.5, color: 0xEDED22 });
         }
     }
 

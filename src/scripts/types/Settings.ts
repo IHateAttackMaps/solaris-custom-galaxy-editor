@@ -1,6 +1,7 @@
 import type { CarrierWaypointActionType } from "./CarrierWaypoint"
 
 export interface Settings {
+    version: number,
     visual: {
         resources: 'numbers' | 'planets' | 'single-ring',
         objectScaling: 'default' | 'clamped',

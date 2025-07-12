@@ -1,5 +1,4 @@
 import type { MapObject } from "./MapObject";
-import type { PlayerTechnologyLevels } from "./Player";
 import type { Specialist } from "./Specialist";
 
 export interface NaturalResources {
@@ -36,9 +35,6 @@ export interface Star extends MapObject {
     wormHoleToStarId: string | null;
     infrastructure: Infrastructure;
     isKingOfTheHillStar?: boolean;
-    specialist?: Specialist | null;
-    targeted?: boolean;
-    manufacturing?: number;
-    effectiveTechs?: PlayerTechnologyLevels;
+    specialist?: Specialist;
     name?: string
 }

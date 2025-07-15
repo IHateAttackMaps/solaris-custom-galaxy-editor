@@ -254,9 +254,8 @@
                                         </td>
                                         <td>
                                             <input class="form-control semi-small-input hidden-number" type="number"
-                                                min="0" required="true"
-                                                :step="(waypoint.action === 'collectPercentage' || waypoint.action === 'dropPercentage') ? 'any' : 1"
-                                                id="actionShipsInput" v-model="waypoint.actionShips"
+                                                min="0" required="true" step="1" id="actionShipsInput"
+                                                v-model="waypoint.actionShips"
                                                 v-if="waypoint.action !== 'nothing' && waypoint.action !== 'collectAll' && waypoint.action !== 'dropAll' && editingWaypoints"></input>
                                             <span
                                                 v-if="!editingWaypoints && !(waypoint.action === 'nothing' || waypoint.action === 'collectAll' || waypoint.action === 'dropAll')">
@@ -264,8 +263,9 @@
                                         </td>
                                         <td>
                                             <input class="form-control semi-small-input hidden-number" type="number"
-                                                min="0" v-if="editingWaypoints" id="delayInput"
-                                                v-model="waypoint.delayTicks"></input>
+                                                min="0" v-if="editingWaypoints"
+                                                :disabled="carrierData.waypoints.indexOf(waypoint) === 0 && isInFlight"
+                                                id="delayInput" step="1" v-model="waypoint.delayTicks"></input>
                                             <span v-if="!editingWaypoints">{{ waypoint.delayTicks || 0 }}</span>
                                         </td>
                                     </template>
@@ -278,7 +278,8 @@
         </div>
         <change-field-menu :object-type="'Carrier'" :object-property-name="'ID'" :return-to-previous-on-update="true"
             :starting-value="carrierData.id" :errors="changeIdErrors" v-if="editingId"
-            v-on:returnToMenu="onReturnToMenu" v-on:updateField="(field: string | undefined, value: string) => onUpdateId(value)" />
+            v-on:returnToMenu="onReturnToMenu"
+            v-on:updateField="(field: string | undefined, value: string) => onUpdateId(value)" />
         <confirmation-modal modalName="deleteCarrierModal" titleText="Delete Carrier" cancelText="No" confirmText="Yes"
             @onConfirm="confirmDeletion">
             <p>{{ modalText }}</p>
@@ -300,6 +301,7 @@ import ConfirmationModal from '../../modal/ConfirmationModal.vue';
 import { Modal } from 'bootstrap';
 import storage from '@/scripts/storage';
 import Map from '@/scripts/map';
+import type { Star } from '@/scripts/types/Star';
 
 export default {
     components: {
@@ -340,6 +342,11 @@ export default {
             hidden: false
         }
     },
+    watch: {
+        isInFlight() {
+            this.updateDelayTicks();
+        }
+    },
     methods: {
         onOwnerChanged() {
             this.carrierData.playerId = this.selectedPlayer;
@@ -355,6 +362,13 @@ export default {
             this.carrierData.specialistId = this.carrierData.specialist?.id ? this.carrierData.specialist.id : null;
 
             if (!this.canLoop) this.toggleLoop();
+        },
+        updateDelayTicks() {
+            if (this.isInFlight) {
+                if (this.carrierData.waypoints[0] && this.carrierData.waypoints[0].delayTicks !== 0) {
+                    this.carrierData.waypoints[0].delayTicks = 0;
+                }
+            }
         },
         onReturnToMenu() {
             this.editingId = false;
@@ -382,10 +396,12 @@ export default {
         updateCarrier() {
             if (!this.validateCarrier()) return;
 
-            let star;
+            let oldStar: Star | undefined;
+            let star: Star | undefined;
+
             if (this.carrierData.orbiting) { // If this carrier was orbiting a star before being updated, we want to update that star as well
-                star = helper.getStarById(this.carrierData.orbiting);
-                if (star == null) throw new Error(`Carrier ${this.carrierData.id} is orbiting a non-existent star!`);
+                oldStar = helper.getStarById(this.carrierData.orbiting);
+                if (oldStar == null) throw new Error(`Carrier ${this.carrierData.id} is orbiting a non-existent star!`);
             }
 
             if (this.carrierData.waypoints.length !== 0) {
@@ -417,6 +433,7 @@ export default {
 
             useGalaxyStore().updateCarrier(this.carrierData);
             editor.reloadCarrier(this.carrierData);
+            if (oldStar != null) editor.updateStarShips(oldStar);
             if (star != null) editor.updateStarShips(star);
 
             useMenuStateStore().setMenuState('none');
@@ -513,11 +530,7 @@ export default {
         onWaypointCreated(e: CarrierWaypoint) {
             e.action = storage.getSettings().carriers.defaultAction;
 
-            if (e.action === 'collectPercentage' || e.action === 'dropPercentage') {
-                e.actionShips = storage.getSettings().carriers.defaultActionShips;
-            } else {
-                e.actionShips = Math.floor(storage.getSettings().carriers.defaultActionShips);
-            }
+            e.actionShips = storage.getSettings().carriers.defaultActionShips;
 
             if (this.carrierData.waypoints.length === 1) { // When creating or re-creating 1st waypoint
                 this.carrierData.progress = 0;
@@ -570,6 +583,10 @@ export default {
                 }
             }
 
+            if (this.carrierData.waypoints[0] && this.carrierData.waypoints[0].delayTicks !== 0 && this.carrierData.progress !== 0 && this.carrierData.progress !== 1) {
+                this.carrierData.waypoints[0].delayTicks = 0;
+            }
+
             if (this.errors.length !== 0) return false;
             return true;
         },
@@ -583,15 +600,18 @@ export default {
                     this.errors.push(`The hyperspace level required for one or more waypoints exceeds this carrier's effective hyperspace level.`);
                 }
 
-                // If the action has no actionShips input, set actionShips to floor(default). 
-                // This is to prevent hidden fractional numbers (due to collect % & drop %).
+                // If the action has no actionShips input, set actionShips to default. 
                 if (waypoint.action === 'nothing' || waypoint.action === 'collectAll' || waypoint.action === 'dropAll') {
-                    waypoint.actionShips = Math.floor(storage.getSettings().carriers.defaultActionShips);
+                    waypoint.actionShips = storage.getSettings().carriers.defaultActionShips;
                 }
             }
 
             if (this.carrierData.waypointsLooped && !this.canLoop) {
                 this.carrierData.waypointsLooped = false;
+            }
+
+            if (this.isInFlight && this.carrierData.waypoints[0] && this.carrierData.waypoints[0].delayTicks !== 0) {
+                this.errors.push(`The first waypoint of an in-flight carrier must have 0 delay.`);
             }
 
             if (this.errors.length !== 0) return false;
@@ -724,6 +744,9 @@ export default {
         },
         fullWaypointTicksToArrival: function () {
             return helper.getTicksToArrival(this.carrierData, false, 0);
+        },
+        isInFlight: function () {
+            return this.carrierData.orbiting == null;
         }
     }
 }

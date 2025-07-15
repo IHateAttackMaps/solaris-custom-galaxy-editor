@@ -790,7 +790,7 @@
                     <label for="defaultActionShips" class="col-12 col-sm-6 col-form-label sub-option-label">Action
                         Value</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="any" class="form-control" id="defaultActionShips"
+                        <input type="number" min="0" step="1" class="form-control" id="defaultActionShips"
                             v-model="settings.carriers.defaultActionShips" />
                     </div>
                 </div>

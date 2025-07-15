@@ -7,7 +7,7 @@ export interface CarrierWaypointBase {
     destination: string;
     action: CarrierWaypointActionType;
     actionShips: number;
-    delayTicks?: number;
+    delayTicks: number;
 };
 
 export interface CarrierWaypoint extends CarrierWaypointBase {

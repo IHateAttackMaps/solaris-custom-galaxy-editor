@@ -372,13 +372,24 @@ export default {
                         }
                     }
 
-                    for (let i = 0; i < carrier.waypoints.length; i++) { // Silently validate waypoints
+                    for (let i = 0; i < carrier.waypoints.length; i++) { // Validate waypoints
                         sourceLoc = stars.find((s) => s.id === carrier.waypoints[i].source)?.location;
                         destinationLoc = stars.find((s) => s.id === carrier.waypoints[i].destination)?.location;
 
                         if (sourceLoc == null || destinationLoc == null) {
                             carrier.waypoints.length = i;
+                            this.warnings.push(`Carrier ${JSON.stringify(carrier)} had invalid waypoints, which had to be removed.`);
                             break;
+                        }
+
+                        if (i !== 0) {
+                            const previousDestinationLoc = stars.find((s) => s.id === carrier.waypoints[i - 1].destination)?.location;
+
+                            if (sourceLoc !== previousDestinationLoc) {
+                                carrier.waypoints.length = i;
+                                this.warnings.push(`Carrier ${JSON.stringify(carrier)} had invalid waypoints, which had to be removed.`);
+                                break;
+                            }
                         }
                     }
 
@@ -391,17 +402,51 @@ export default {
                     return;
                 }
 
+                // Prevent duplicate IDs
+                const starIdSet = new Set<string>(stars.map(s => s.id));
+                const carrierIdSet = new Set<string>(carriers.map(c => c.id));
+                const playerIdSet = new Set<string>(players.map(p => p.id));
+                const teamIdSet = new Set<string>(teams.map(t => t.id));
+
+                if (starIdSet.size !== stars.length) {
+                    this.errors.push(`Multiple stars cannot have the same ID.`);
+                    return;
+                }
+
+                if (carrierIdSet.size !== carriers.length) {
+                    this.errors.push(`Multiple carriers cannot have the same ID.`);
+                    return;
+                }
+
+                if (playerIdSet.size !== players.length) {
+                    this.errors.push(`Multiple players cannot have the same ID.`);
+                    return;
+                }
+
+                if (teamIdSet.size !== teams.length) {
+                    this.errors.push(`Multiple teams cannot have the same ID.`);
+                    return;
+                }
+
                 if (teams.length !== 0) {
                     // Team game validation
-                    const totalPlayersInTeams = teams.reduce((partialSum, t) => partialSum += t.players.length, 0);
-                    if (totalPlayersInTeams < players.length) {
+                    const allPlayerIds = teams.flatMap(t => t.players);
+
+                    if (allPlayerIds.length < players.length) {
                         this.errors.push(`In a team game, all players must be in a team.`);
                         return;
                     }
 
-                    const allPlayerIds = teams.flatMap(t => t.players);
                     if (new Set(allPlayerIds).size !== allPlayerIds.length) {
                         this.errors.push(`A player must be in only one team.`);
+                        return;
+                    }
+
+                    for (const playerId of allPlayerIds) {
+                        if (!playerIdSet.has(playerId)) {
+                            this.errors.push(`Invalid player ID '${playerId}' in team.`);
+                            return;
+                        }
                     }
                 }
 
@@ -410,6 +455,7 @@ export default {
                 const playerHomeStarIdSet = new Set<string>(filteredPlayerHomeStarIds);
                 if (filteredPlayerHomeStarIds.length !== playerHomeStarIdSet.size) {
                     this.errors.push(`Multiple players cannot have the same capital star.`);
+                    return;
                 }
 
                 // Check if the galaxy has split-NR stars
@@ -697,7 +743,8 @@ export default {
                     return;
                 };
 
-                if (!this.checkNumericalProperty(waypoint, 'actionShips', false, true)) return; // actionShips may be decimal if action is collect/drop %
+                if (!this.checkNumericalProperty(waypoint, 'actionShips', true, true)) return;
+                if (!this.checkNumericalProperty(waypoint, 'delayTicks', true, true)) return;
                 if (waypoint.action !== 'collectPercentage' && waypoint.action !== 'dropPercentage') {
                     waypoint.actionShips = Math.floor(waypoint.actionShips);
                 }
@@ -874,6 +921,11 @@ export default {
 
             if (typeof object[property] !== type) {
                 this.errors.push(`Invalid type property '${property}' of ${objectType} ${JSON.stringify(object)}: expected '${type}', got '${typeof object[property]}'.`);
+                return false;
+            }
+
+            if (typeof object[property] === 'string' && object[property].length === 0) { // Empty strings are never valid.
+                this.errors.push(`Empty string property '${property}' of ${objectType} ${JSON.stringify(object)}.`);
                 return false;
             }
 

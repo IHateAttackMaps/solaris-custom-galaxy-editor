@@ -3,6 +3,10 @@
     letter-spacing: .046875rem;
 }
 
+canvas {
+    user-select: none !important;
+}
+
 .form-control {
     display: block !important;
     width: 100% !important;

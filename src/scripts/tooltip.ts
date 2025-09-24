@@ -104,7 +104,7 @@ export default class {
         }
 
         const carrierStrings = carriers.map(carrier => {
-            let result = `\nCarrier ${carrier.id}` + `\n 🚀 ${carrier.ships || '???'} ship${carrier.ships !== 1 ? 's' : ''}`;
+            let result = `\nCarrier ${carrier.name ? carrier.name : carrier.id}` + `\n 🚀 ${carrier.ships || '???'} ship${carrier.ships !== 1 ? 's' : ''}`;
 
             if (carrier.specialist && carrier.specialist.name) {
                 result += `\n 🧑‍🚀 ${carrier.specialist.name}`;

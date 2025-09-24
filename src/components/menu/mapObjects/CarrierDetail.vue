@@ -1,9 +1,12 @@
 <template>
     <div class="menu-page">
-        <div class="fade-in" v-show="!editingId">
-            <menu-title :title="title">
-                <button type="button" class="btn btn-sm btn-outline-success me-1" @click="editingId = true">
+        <div class="fade-in" v-show="!editingId && !editingName">
+            <menu-title :title="title" :coloured-text="carrier?.name">
+                <button class="btn btn-sm btn-outline-success me-1" @click="editingName = true">
                     <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-warning me-1" @click="editingId = true" v-if="allowEditingId">
+                    <i class="fas fa-hashtag"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-primary me-1" @click="toggleHidden()">
                     <i class="fas fa-eye" v-if="!hidden"></i>
@@ -48,9 +51,9 @@
                         <div class="col text-center" id="etaCol">
                             <span title="This carrier is in transit">
                                 <i class="fas fa-star"></i>
-                                {{ carrierData.waypoints[0]?.source }}
+                                {{ getStarNameOrId(carrierData.waypoints[0]?.source) }}
                                 <i class="fas fa-arrow-right"></i>
-                                {{ carrierData.waypoints[0]?.destination }}
+                                {{ getStarNameOrId(carrierData.waypoints[0]?.destination) }}
                             </span>
                         </div>
                         <div class="col text-center">
@@ -207,7 +210,7 @@
                                         <td>
                                             <span>
                                                 <i class="fas fa-star"></i>
-                                                {{ waypoint.destination }}
+                                                {{ getStarNameOrId(waypoint.destination) }}
                                             </span>
                                         </td>
                                         <td class="waypointDistance">
@@ -280,6 +283,10 @@
             :starting-value="carrierData.id" :errors="changeIdErrors" v-if="editingId"
             v-on:returnToMenu="onReturnToMenu"
             v-on:updateField="(field: string | undefined, value: string) => onUpdateId(value)" />
+        <change-field-menu :object-type="'Carrier'" :object-property-name="'Name'" :return-to-previous-on-update="true"
+            :starting-value="carrierData.name" :errors="changeNameErrors" v-if="editingName"
+            v-on:returnToMenu="onReturnToMenu"
+            v-on:updateField="(field: string | undefined, value: string | null) => onUpdateName(value)" />
         <confirmation-modal modalName="deleteCarrierModal" titleText="Delete Carrier" cancelText="No" confirmText="Yes"
             @onConfirm="confirmDeletion">
             <p>{{ modalText }}</p>
@@ -332,14 +339,17 @@ export default {
             selectionPlayers: helper.selectionPlayers(false),
             selectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().getValidCarrierSpecialists()),
             editingId: false,
+            editingName: false,
             deleteCarrierModal: null as Modal | null,
             modalText: undefined as string | undefined,
             changeIdErrors: [] as string[],
+            changeNameErrors: [] as string[],
             errors: [] as string[],
             waypointCreatedHandler: null as any,
             waypointOutOfRangeHandler: null as any,
             editingWaypoints: false,
-            hidden: false
+            hidden: false,
+            allowEditingId: storage.getSettings().technical.allowChangeId === 'enabled'
         }
     },
     watch: {
@@ -372,8 +382,12 @@ export default {
         },
         onReturnToMenu() {
             this.editingId = false;
+            this.editingName = false;
             for (const e in this.changeIdErrors) { // Actually updates prop of ChangeFieldMenu
                 this.changeIdErrors.pop();
+            }
+            for (const e in this.changeNameErrors) {
+                this.changeNameErrors.pop();
             }
         },
         onUpdateId(value: string) {
@@ -392,6 +406,21 @@ export default {
             this.carrierData.id = value;
 
             this.$toast.default(`Changed carrier ID to ${this.carrierData.id}.`);
+        },
+        onUpdateName(value: string | null | undefined) {
+            for (const e in this.changeNameErrors) {
+                this.changeNameErrors.pop();
+            }
+            if (value == null) value = undefined;
+
+            useGalaxyStore().updateCarrierProperty(this.carrierData, 'name', value);
+            this.carrierData.name = value;
+
+            if (value) {
+                this.$toast.default(`Changed carrier name to ${this.carrierData.name}.`);
+            } else {
+                this.$toast.default(`Cleared carrier name.`);
+            }
         },
         updateCarrier() {
             if (!this.validateCarrier()) return;
@@ -620,6 +649,9 @@ export default {
         toggleHidden() {
             this.hidden = !this.hidden;
             editor.onMenuToggled(true, this.hidden);
+        },
+        getStarNameOrId(starId: string) {
+            return helper.getStarNameOrId(starId);
         }
     },
     mounted() {
@@ -655,6 +687,7 @@ export default {
         },
         title: function () {
             if (this.carrier == null) return;
+            if (this.carrier.name) return;
             return `Carrier ${this.carrier.id}`;
         },
         effectiveTechs: function () {

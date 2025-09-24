@@ -1,6 +1,6 @@
 <template>
     <div class="menu-page">
-        <div class="fade-in" v-show="!editingId">
+        <div class="fade-in" v-show="!editingId && !editingName">
             <menu-title :title="'Players'" />
 
             <div class="bg-dark-custom pt-2 pb-2">
@@ -65,8 +65,9 @@
                                 </td>
                                 <td width="50%">
                                     <span>
-                                        <a href="javascript:;" @click.prevent="openPlayerDetail(player.id)">{{ player.id
-                                        }}</a>
+                                        <a href="javascript:;" @click.prevent="openPlayerDetail(player.id)">{{
+                                            player.alias ? player.alias : player.id
+                                            }}</a>
                                     </span>
                                 </td>
                                 <td width="30%" class="text-end">
@@ -97,10 +98,15 @@
             <div v-if="isTeamGame" class="row pb-3" v-for="team in sortedTeams" :key="team.team.id">
                 <div class="team-header-row wide-bg pt-1 pb-1">
                     <div class="col col-flex" id="teamNameCol">
-                        <h4 class="h-main me-2">Team {{
-                            team.team.id }}</h4>
-                        <button type="button" class="btn btn-sm btn-outline-success" @click="editTeamId(team.team)">
+                        <h4 class="h-main me-2" :class="{ 'text-warning': colourCustomNames && team.team.name }">
+                            {{ team.team.name ? team.team.name : `Team ${team.team.id}` }}
+                        </h4>
+                        <button type="button" class="btn btn-sm btn-outline-success" @click="editTeamName(team.team)">
                             <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-warning ms-1"
+                            @click="editTeamId(team.team)" v-if="allowEditingId">
+                            <i class="fas fa-hashtag"></i>
                         </button>
                     </div>
                     <div class="col col-auto auto-margin text-end">
@@ -133,8 +139,9 @@
                                 </td>
                                 <td width="50%">
                                     <span>
-                                        <a href="javascript:;" @click.prevent="openPlayerDetail(player.id)">{{ player.id
-                                        }}</a>
+                                        <a href="javascript:;" @click.prevent="openPlayerDetail(player.id)">{{
+                                            player.alias ? player.alias : player.id
+                                            }}</a>
                                     </span>
                                 </td>
                                 <td width="30%" class="text-end">
@@ -172,7 +179,12 @@
         </div>
         <change-field-menu :object-type="'Team'" :object-property-name="'ID'" :return-to-previous-on-update="true"
             :starting-value="selectedTeam!.id" :errors="changeIdErrors" v-if="editingId"
-            v-on:returnToMenu="onReturnToMenu" v-on:updateField="(field: string | undefined, value: string) => onUpdateTeamId(value)" />
+            v-on:returnToMenu="onReturnToMenu"
+            v-on:updateField="(field: string | undefined, value: string) => onUpdateTeamId(value)" />
+        <change-field-menu :object-type="'Team'" :object-property-name="'Name'" :return-to-previous-on-update="true"
+            :starting-value="selectedTeam!.name" :errors="changeNameErrors" v-if="editingName"
+            v-on:returnToMenu="onReturnToMenu"
+            v-on:updateField="(field: string | undefined, value: string | null) => onUpdateTeamName(value)" />
         <confirmation-modal modalName="deletePlayerModal" titleText="Delete Player" cancelText="No" confirmText="Yes"
             @onConfirm="confirmPlayerDeletion" @onCancel="selectedPlayer = null" @onDismiss="selectedPlayer = null">
             <p>{{ modalText }}</p>
@@ -215,15 +227,19 @@ export default {
             sortMode: 'conquest',
             displayData: 'stars',
             editingId: false,
+            editingName: false,
             selectedTeam: null as Team | null,
             selectedPlayer: null as Player | null,
             changeIdErrors: [] as string[],
+            changeNameErrors: [] as string[],
             deletePlayerModal: null as Modal | null,
             deleteTeamModal: null as Modal | null,
             transferPlayersModal: null as Modal | null,
             modalText: undefined as string | undefined, // Can be reused for all modals
             transferringPlayers: false,
-            transferSelection: new Map<string, string>()
+            transferSelection: new Map<string, string>(),
+            colourCustomNames: storage.getSettings().visual.colourCustomNames === 'enabled',
+            allowEditingId: storage.getSettings().technical.allowChangeId === 'enabled'
         }
     },
     methods: {
@@ -305,15 +321,21 @@ export default {
         },
         editTeamId(team: Team) {
             this.selectedTeam = team;
-
             this.editingId = true;
+        },
+        editTeamName(team: Team) {
+            this.selectedTeam = team;
+            this.editingName = true;
         },
         onReturnToMenu() {
             this.editingId = false;
+            this.editingName = false;
             for (const e in this.changeIdErrors) { // Actually updates prop of ChangeFieldMenu
                 this.changeIdErrors.pop();
             }
-
+            for (const e in this.changeNameErrors) {
+                this.changeNameErrors.pop();
+            }
             this.selectedTeam = null;
         },
         onUpdateTeamId(value: string) {
@@ -332,6 +354,23 @@ export default {
             this.selectedTeam!.id = value;
 
             this.$toast.default(`Changed team ID to ${this.selectedTeam!.id}.`);
+
+            this.selectedTeam = null;
+        },
+        onUpdateTeamName(value: string | null | undefined) {
+            for (const e in this.changeNameErrors) {
+                this.changeNameErrors.pop();
+            }
+            if (value == null) value = undefined;
+
+            this.selectedTeam!.name = value;
+            useGalaxyStore().updateTeam(this.selectedTeam!);
+
+            if (value) {
+                this.$toast.default(`Changed team name to ${this.selectedTeam!.name}.`);
+            } else {
+                this.$toast.default(`Cleared team name.`);
+            }
 
             this.selectedTeam = null;
         },

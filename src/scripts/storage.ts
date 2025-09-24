@@ -1,7 +1,7 @@
 import type { Settings } from "./types/Settings";
 
 class StorageService {
-    static currentVersion = 1; // Increment when adding new settings
+    static currentVersion = 2; // Increment when adding new settings
 
     settings = {} as Settings;
 
@@ -54,6 +54,7 @@ class StorageService {
                 resourcesRingOpacity: 0.1,
                 displayGalaxyCenter: 'midpoint',
                 displayScaleBar: 'enabled',
+                colourCustomNames: 'enabled',
                 displayCursorCoordinates: 'enabled',
                 carrierPathWidth: 1,
                 carrierLoopStyle: 'dashed',
@@ -143,7 +144,7 @@ class StorageService {
                 defaultCarrierSpecialist: null
             },
             json: {
-                playerIdSource: 'name-when-possible',
+                ignoreCustomNames: 'disabled',
                 simplifyIds: 'disabled'
             },
             ruler: {
@@ -160,7 +161,8 @@ class StorageService {
             },
             technical: {
                 performanceMonitor: 'disabled',
-                chunkVisualizer: 'disabled'
+                chunkVisualizer: 'disabled',
+                allowChangeId: 'disabled'
             }
         } as Settings
     }

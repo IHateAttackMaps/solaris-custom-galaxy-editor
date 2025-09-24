@@ -177,10 +177,22 @@ export const useGalaxyStore = defineStore({
                     return false;
             }
         },
+        updateStarProperty(star: Star, property: string, value: any) {
+            const index = this.$state.galaxy.stars.findIndex(s => s.id === star.id);
+            if (index > -1) {
+                (this.$state.galaxy.stars[index] as any)[property] = value;
+            }
+        },
         updateCarrierProperty(carrier: Carrier, property: string, value: any) {
             const index = this.$state.galaxy.carriers.findIndex(c => c.id === carrier.id);
             if (index > -1) {
-                (this.$state.galaxy.carriers[index] as any)[property] = value
+                (this.$state.galaxy.carriers[index] as any)[property] = value;
+            }
+        },
+        updatePlayerProperty(player: Player, property: string, value: any) {
+            const index = this.$state.galaxy.players.findIndex(p => p.id === player.id);
+            if (index > -1) {
+                (this.$state.galaxy.players[index] as any)[property] = value;
             }
         },
         addPlayerToTeam(playerId: string, teamId: string) {

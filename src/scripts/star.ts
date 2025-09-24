@@ -195,6 +195,12 @@ class StarObject extends EventEmitter {
         this.updateVisibility();
     }
 
+    updateName(name?: string) {
+        this.data!.name = name;
+        this.drawName();
+        this.updateVisibility();
+    }
+
     updatePosition() {
         this.container.position.x = this.data!.location.x;
         this.container.position.y = this.data!.location.y;
@@ -667,7 +673,7 @@ class StarObject extends EventEmitter {
 
         if (!this.text_name) {
             this.text_name = new BitmapText({
-                text: this.data!.id,
+                text: this.data!.name ? this.data!.name : this.data!.id,
                 style: {
                     fontFamily: 'chakrapetch',
                     fontSize: StarObject.nameSize

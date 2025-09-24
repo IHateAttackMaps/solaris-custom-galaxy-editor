@@ -1,9 +1,12 @@
 <template>
     <div class="menu-page" v-if="playerData != null">
-        <div class="fade-in" v-show="!editingId">
-            <menu-title :title="title">
-                <button class="btn btn-sm btn-outline-success me-1" @click="editingId = true">
+        <div class="fade-in" v-show="!editingId && !editingAlias">
+            <menu-title :title="title" :coloured-text="player?.alias">
+                <button class="btn btn-sm btn-outline-success me-1" @click="editingAlias = true">
                     <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-warning me-1" @click="editingId = true" v-if="allowEditingId">
+                    <i class="fas fa-hashtag"></i>
                 </button>
             </menu-title>
             <form id="playerDetailForm" @submit.prevent="updatePlayer()">
@@ -95,9 +98,9 @@
                     <div class="col col-flex align-center">
                         <i class="fas fa-house me-1"></i>
                         <p>Capital Star:</p>
-                        <input id="specialistTokens" class="form-control semi-small-input ms-1 me-1"
-                            type="text" v-model="playerData.homeStarId"
-                            :placeholder="'Enter capital star ID here'" ref="homeStarIdInputElement" />
+                        <input id="specialistTokens" class="form-control semi-small-input ms-1 me-1" type="text"
+                            v-model="playerData.homeStarId" :placeholder="'Enter capital star ID here'"
+                            ref="homeStarIdInputElement" />
                         <button type="button" class="btn btn-outline-primary btn-ssm" @click="toggleHomeStarSelectMode"
                             :class="{ active: inHomeStarSelectMode }"><i class="fas fa-hand-pointer"></i></button>
                     </div>
@@ -235,7 +238,10 @@
         <change-field-menu :object-type="'Player'" :object-property-name="'ID'" :return-to-previous-on-update="true"
             :starting-value="playerData.id" :errors="changeIdErrors" v-if="editingId" v-on:returnToMenu="onReturnToMenu"
             v-on:updateField="(field: string | undefined, value: string) => onUpdateId(value)" />
-
+        <change-field-menu :object-type="'Player'" :object-property-name="'Alias'" :return-to-previous-on-update="true"
+            :starting-value="playerData.alias" :errors="changeAliasErrors" v-if="editingAlias"
+            v-on:returnToMenu="onReturnToMenu"
+            v-on:updateField="(field: string | undefined, value: string | null) => onUpdateAlias(value)" />
         <confirmation-modal modalName="deletePlayerModal" titleText="Delete Player" cancelText="No" confirmText="Yes"
             @onConfirm="confirmDeletion">
             <p>{{ modalText }}</p>
@@ -289,18 +295,25 @@ export default {
                 }
             } as Player,
             editingId: false,
+            editingAlias: false,
             deletePlayerModal: null as any,
             modalText: undefined as string | undefined,
             changeIdErrors: [] as string[],
+            changeAliasErrors: [] as string[],
             errors: [] as string[],
-            inHomeStarSelectMode: false
+            inHomeStarSelectMode: false,
+            allowEditingId: storage.getSettings().technical.allowChangeId === 'enabled'
         }
     },
     methods: {
         onReturnToMenu() {
             this.editingId = false;
+            this.editingAlias = false;
             for (const e in this.changeIdErrors) { // Actually updates prop of ChangeFieldMenu
                 this.changeIdErrors.pop();
+            }
+            for (const e in this.changeAliasErrors) {
+                this.changeAliasErrors.pop();
             }
         },
         onUpdateId(value: string) {
@@ -319,6 +332,21 @@ export default {
             this.playerData.id = value;
 
             this.$toast.default(`Changed player ID to ${this.playerData.id}.`);
+        },
+        onUpdateAlias(value: string | null | undefined) {
+            for (const e in this.changeAliasErrors) {
+                this.changeAliasErrors.pop();
+            }
+            if (value == null) value = undefined;
+
+            useGalaxyStore().updatePlayerProperty(this.playerData, 'alias', value);
+            this.playerData.alias = value;
+
+            if (value) {
+                this.$toast.default(`Changed player alias to ${this.playerData.alias}.`);
+            } else {
+                this.$toast.default(`Cleared player alias.`);
+            }
         },
         toggleHomeStarSelectMode() {
             if (this.inHomeStarSelectMode) {
@@ -472,6 +500,7 @@ export default {
         },
         title: function () {
             if (this.player == null) return;
+            if (this.player.alias) return;
             return `Player ${this.player.id}`;
         },
         playerStarCount: function () {

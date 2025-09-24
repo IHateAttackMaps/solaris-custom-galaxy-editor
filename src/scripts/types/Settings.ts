@@ -23,6 +23,7 @@ export interface Settings {
         displayGalaxyCenter: 'disabled' | 'midpoint' | 'centroid',
         displayScaleBar: 'enabled' | 'disabled',
         displayCursorCoordinates: 'enabled' | 'disabled',
+        colourCustomNames: 'enabled' | 'disabled',
         carrierPathWidth: number,
         carrierLoopStyle: 'solid' | 'dashed',
         carrierPathDashLength: number,
@@ -112,7 +113,7 @@ export interface Settings {
     },
     json: {
         simplifyIds: 'enabled' | 'disabled',
-        playerIdSource: 'name-when-possible' | 'always-id'
+        ignoreCustomNames: 'always' | 'when-importing' | 'disabled'
     },
     ruler: {
         separateBaseCarrierSpeed: 'enabled' | 'disabled'
@@ -128,6 +129,7 @@ export interface Settings {
     },
     technical: {
         performanceMonitor: 'enabled' | 'disabled',
-        chunkVisualizer: 'enabled' | 'disabled'
+        chunkVisualizer: 'enabled' | 'disabled',
+        allowChangeId: 'enabled' | 'disabled'
     }
 }

@@ -368,7 +368,7 @@ class HelperService {
         for (const player of this._getGalaxy().players) {
             selection.push({
                 id: player.id,
-                alias: player.id
+                alias: player.alias ? player.alias : player.id
             });
         }
         return selection;
@@ -404,7 +404,17 @@ class HelperService {
     }
 
     locationToProgressAlongPath(location: Location, sourceLoc: Location, destinationLoc: Location) {
-        const progress = (location.x - sourceLoc.x) / (destinationLoc.x - sourceLoc.x);
+        const deltaX = destinationLoc.x - sourceLoc.x;
+        const deltaY = destinationLoc.y - sourceLoc.y;
+        
+        let progress: number;
+        if (deltaX > deltaY) {
+            progress = (location.x - sourceLoc.x) / deltaX;
+        } else {
+            progress = (location.y - sourceLoc.y) / deltaY;
+        }
+        if (Number.isNaN(progress)) progress = 1;
+
         return progress;
     }
 
@@ -840,6 +850,11 @@ class HelperService {
         return this.getHyperspaceDistance(carrier) >= this.getDistanceBetweenLocations(sourceStar.location, destinationStar.location);
     }
 
+    getStarNameOrId(starId: string) {
+        const star = this.getStarById(starId);
+        if (star == null) return;
+        return star.name ? star.name : star.id;
+    }
 }
 
 export default new HelperService();

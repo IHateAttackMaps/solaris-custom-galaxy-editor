@@ -70,7 +70,8 @@ export default {
             input: '',
             json: {} as any,
             errors: [] as Array<string>,
-            warnings: [] as Array<string>
+            warnings: [] as Array<string>,
+            ignoreCustomNames: storage.getSettings().json.ignoreCustomNames
         }
     },
     methods: {
@@ -494,14 +495,6 @@ export default {
                     if (simplifiedGalaxy.teams != null) teams = simplifiedGalaxy.teams;
                 }
 
-                if (storage.getSettings().json.playerIdSource === 'name-when-possible') {
-                    const updatedGalaxy = this.changeIdsToNames(stars, carriers, players, teams);
-                    stars = updatedGalaxy.stars;
-                    carriers = updatedGalaxy.carriers;
-                    players = updatedGalaxy.players;
-                    if (updatedGalaxy.teams != null) teams = updatedGalaxy.teams;
-                }
-
                 this.setGalaxy(stars, carriers, players, teams);
 
             } catch (e) {
@@ -514,7 +507,7 @@ export default {
             this.errors.length = 0;
             this.warnings.length = 0;
 
-            const galaxy = useGalaxyStore().$state.galaxy;
+            const galaxy = JSON.parse(JSON.stringify(useGalaxyStore().$state.galaxy)) as Galaxy;
             const playerHomeStarIds = galaxy.players.map(p => p.homeStarId);
             const playerHomeStarIdSet = new Set<string>(playerHomeStarIds.filter(id => id != null));
             const capitalStarIds = galaxy.stars.filter(s => s.homeStar).map(s => s.id);
@@ -530,8 +523,15 @@ export default {
                 this.warnings.push(`One or more players do not have a capital star.`);
             }
 
+            if (this.ignoreCustomNames === 'always') {
+                galaxy.stars.forEach(s => delete s.name);
+                galaxy.carriers.forEach(c => delete c.name);
+                galaxy.players.forEach(p => delete p.alias);
+                galaxy.teams?.forEach(t => delete t.name);
+            }
+
             // Output JSON structure is 'editor_this'.
-            this.input = JSON.stringify(useGalaxyStore().$state.galaxy);
+            this.input = JSON.stringify(galaxy);
         },
         parseStar(star: any, jsonStructure: JSONStructure) {
             let parsedStar = {} as Star;
@@ -662,7 +662,7 @@ export default {
                 shipsActual: star.shipsActual,
                 ships: star.ships,
                 infrastructure: star.infrastructure,
-                name: star.name,
+                name: this.ignoreCustomNames === 'disabled' ? star.name : undefined,
                 isKingOfTheHillStar: star.isKingOfTheHillStar
             };
 
@@ -776,7 +776,7 @@ export default {
                 isGift: carrier.isGift,
                 waypoints: parsedWaypoints,
                 progress: carrier.progress,
-                name: carrier.name
+                name: this.ignoreCustomNames === 'disabled' ? carrier.name : undefined
             } as unknown as Carrier; // Location may be invalid, but we fix that later
 
             return parsedCarrier;
@@ -849,7 +849,7 @@ export default {
             parsedPlayer = {
                 id: jsonStructure === 'solaris_game' ? player._id : player.id,
                 homeStarId: player.homeStarId,
-                alias: player.alias,
+                alias: this.ignoreCustomNames === 'disabled' ? player.alias : undefined,
                 colour: player.colour,
                 shape: player.shape,
                 technologies: technologies,
@@ -885,7 +885,7 @@ export default {
             parsedTeam = {
                 id: jsonStructure === 'solaris_game' ? team._id : team.id,
                 players: team.players,
-                name: team.name
+                name: this.ignoreCustomNames === 'disabled' ? team.name : undefined
             };
 
             return parsedTeam;
@@ -1047,63 +1047,6 @@ export default {
                 players: players,
                 teams: teams
             }
-        },
-        changeIdsToNames(stars: Star[], carriers: Carrier[], players: Player[], teams?: Team[]) {
-            if (teams != null) {
-                for (const team of teams) {
-                    const playerIds: string[] = [];
-                    for (let teamPlayerId of team.players) {
-                        const teamPlayerAlias = players.find((p) => p.id === teamPlayerId)?.alias;
-                        if (teamPlayerAlias != null) playerIds.push(teamPlayerAlias);
-                    }
-                    team.players = playerIds;
-                    if (team.name != null) team.id = team.name;
-                }
-            }
-            for (const carrier of carriers) {
-                if (carrier.orbiting != null) {
-                    const star = stars.find(s => s.id === carrier.orbiting);
-                    if (star?.name != null) carrier.orbiting = star.name;
-                }
-                if (carrier.waypoints != null) {
-                    for (const waypoint of carrier.waypoints) {
-                        const sourceStar = stars.find(s => s.id === waypoint.source);
-                        const destinationStar = stars.find(s => s.id === waypoint.destination);
-                        if (sourceStar?.name != null) waypoint.source = sourceStar.name;
-                        if (destinationStar?.name != null) waypoint.destination = destinationStar.name;
-                    }
-                }
-                const owner = players.find(p => p.id === carrier.playerId);
-                if (owner?.alias != null) carrier.playerId = owner.alias;
-                if (carrier.name != null) carrier.id = carrier.name;
-            }
-            for (const player of players) {
-                const homeStar = stars.find(s => s.id === player.homeStarId);
-                if (homeStar?.name != null) player.homeStarId = homeStar.name;
-            }
-            for (const star of stars) {
-                if (star.playerId != null) {
-                    const owner = players.find(p => p.id === star.playerId);
-                    if (owner?.alias != null) star.playerId = owner.alias;
-                }
-                if (star.wormHoleToStarId != null) {
-                    const wormholePairStar = stars.find(s => s.id === star.wormHoleToStarId);
-                    if (wormholePairStar?.name != null) star.wormHoleToStarId = wormholePairStar.name;
-                }
-            }
-            for (const star of stars) {
-                if (star.name != null) star.id = star.name;
-            }
-            for (const player of players) {
-                if (player.alias != null) player.id = player.alias;
-            }
-
-            return {
-                stars: stars,
-                carriers: carriers,
-                players: players,
-                teams: teams
-            };
         }
     }
 }

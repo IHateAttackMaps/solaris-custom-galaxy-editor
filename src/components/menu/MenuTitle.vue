@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col">
-            <h4>{{ title }}</h4>
+            <h4>{{ title }}<span :class="{ 'text-warning': colourText }">{{ colouredText }}</span></h4>
         </div>
         <div class="col-auto">
             <slot></slot>
@@ -11,15 +11,22 @@
 </template>
 
 <script lang="ts">
+import storage from '@/scripts/storage';
 import { useMenuStateStore } from '@/stores/menuState';
 
 export default {
     props: {
-        title: String
+        title: String,
+        colouredText: String
     },
     methods: {
         close() {
             useMenuStateStore().setMenuState('none');
+        }
+    },
+    computed: {
+        colourText: function () {
+            return storage.getSettings().visual.colourCustomNames === 'enabled';
         }
     }
 }

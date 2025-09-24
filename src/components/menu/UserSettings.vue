@@ -133,6 +133,16 @@
                     </div>
                 </div>
                 <div class="row pt-1 pb-1">
+                    <label for="colourCustomNames" class="col-12 col-sm-6 col-form-label">Highlight Custom
+                        Names</label>
+                    <div class="col-12 col-sm-6">
+                        <select class="form-control" id="colourCustomNames" v-model="settings.visual.colourCustomNames">
+                            <option value="disabled">Disabled</option>
+                            <option value="enabled">Enabled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
                     <label for="carrierPathWidth" class="col-12 col-sm-6 col-form-label">Carrier Path Width</label>
                     <div class="col-12 col-sm-6">
                         <input type="number" min="0" class="form-control" id="carrierPathWidth"
@@ -797,11 +807,12 @@
 
                 <h5 class="pt-2">JSON</h5>
                 <div class="row pt-1 pb-1">
-                    <label for="playerIdSource" class="col-12 col-sm-6 col-form-label">ID source</label>
+                    <label for="ignoreCustomNames" class="col-12 col-sm-6 col-form-label">Ignore Custom Names</label>
                     <div class="col-12 col-sm-6">
-                        <select class="form-control" id="playerIdSource" v-model="settings.json.playerIdSource">
-                            <option value="name-when-possible">Use name when possible</option>
-                            <option value="always-id">Always use IDs</option>
+                        <select class="form-control" id="ignoreCustomNames" v-model="settings.json.ignoreCustomNames">
+                            <option value="disabled">Disabled</option>
+                            <option value="when-importing">Only When Importing</option>
+                            <option value="always">Always</option>
                         </select>
                     </div>
                 </div>
@@ -920,6 +931,15 @@
                     <label for="chunkVisualizer" class="col-12 col-sm-6 col-form-label">Chunk Visualizer</label>
                     <div class="col-12 col-sm-6">
                         <select class="form-control" id="chunkVisualizer" v-model="settings.technical.chunkVisualizer">
+                            <option value="disabled">Disabled</option>
+                            <option value="enabled">Enabled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="allowChangeId" class="col-12 col-sm-6 col-form-label">Allow Changing IDs</label>
+                    <div class="col-12 col-sm-6">
+                        <select class="form-control" id="allowChangeId" v-model="settings.technical.allowChangeId">
                             <option value="disabled">Disabled</option>
                             <option value="enabled">Enabled</option>
                         </select>

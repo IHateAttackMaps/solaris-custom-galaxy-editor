@@ -327,6 +327,10 @@ class GalaxyEditor {
         this.map!.updateStarId(star);
     }
 
+    updateStarName(star: Star) {
+        this.map!.updateStarName(star);
+    }
+
     updateStarShips(star: Star) {
         this.map!.updateStarShips(star);
     }

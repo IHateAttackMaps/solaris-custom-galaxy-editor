@@ -6,14 +6,16 @@
             <table class="table">
                 <tbody>
                     <tr v-for="mapObject in mapObjects" :key="mapObject.id">
-                        <td v-if="mapObject.type === 'star'" class="icon-td ps-2 pe-2" @click="openObjectDetail(mapObject)">
+                        <td v-if="mapObject.type === 'star'" class="icon-td ps-2 pe-2"
+                            @click="openObjectDetail(mapObject)">
                             <map-object-icon-container :shape="getPlayerShape(mapObject)"
                                 :colour="getPlayerColour(mapObject)">
                                 <specialist-icon :type="'star'" :default-icon="'star'"
                                     :specialist="mapObject.data.specialist" />
                             </map-object-icon-container>
                         </td>
-                        <td v-if="mapObject.type === 'carrier'" class="icon-td ps-2 pe-2" @click="openObjectDetail(mapObject)">
+                        <td v-if="mapObject.type === 'carrier'" class="icon-td ps-2 pe-2"
+                            @click="openObjectDetail(mapObject)">
                             <map-object-icon-container :shape="getPlayerShape(mapObject)"
                                 :colour="getPlayerColour(mapObject)">
                                 <specialist-icon :type="'carrier'" :default-icon="'rocket'"
@@ -27,8 +29,9 @@
                         </td>
                         <td class="ps-2 pe-2">
                             <span>
-                                <a href="javascript:;" @click.prevent="openObjectDetail(mapObject)">{{ mapObject.data.id
-                                }}</a>
+                                <a href="javascript:;" @click.prevent="openObjectDetail(mapObject)">{{
+                                    mapObject.data.name ? mapObject.data.name : mapObject.data.id
+                                    }}</a>
                             </span>
                         </td>
                         <td class="text-end ps-2 pe-2">
@@ -41,7 +44,7 @@
                         </td>
                         <td class="ps-2 pe-2">
                             <span
-                                :title="`${mapObject.data.orbiting ? `Orbiting ${mapObject.data.orbiting}` : `Flying to ${mapObject.data.waypoints[0].destination}`}`"
+                                :title="`${mapObject.data.orbiting ? `Orbiting ${getStarNameOrId(mapObject.data.orbiting)}` : `Flying to ${getStarNameOrId(mapObject.data.waypoints[0].destination)}`}`"
                                 v-if="mapObject.type === 'carrier'">
                                 <i class="fas fa-star" v-if="mapObject.data.orbiting"></i>
                                 <i class="fas fa-arrow-right" v-if="!mapObject.data.orbiting"></i>
@@ -90,6 +93,9 @@ export default {
                     editor.map!.clickCarrier(mapObject.data.id);
                     break;
             }
+        },
+        getStarNameOrId(starId: string) {
+            return helper.getStarNameOrId(starId);
         }
     }
 }

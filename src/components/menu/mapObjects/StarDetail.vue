@@ -1,9 +1,12 @@
 <template>
     <div class="menu-page" v-if="starData != null">
-        <div class="fade-in" v-show="!editingId">
-            <menu-title :title="title">
-                <button class="btn btn-sm btn-outline-success me-1" @click="editingId = true">
+        <div class="fade-in" v-show="!editingId && !editingName">
+            <menu-title :title="title" :coloured-text="star?.name">
+                <button class="btn btn-sm btn-outline-success me-1" @click="editingName = true">
                     <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-warning me-1" @click="editingId = true" v-if="allowEditingId">
+                    <i class="fas fa-hashtag"></i>
                 </button>
             </menu-title>
             <form id="starDetailForm" @submit.prevent="updateStar()">
@@ -88,9 +91,9 @@
                     <div class="col-flex col-auto text-center">
                         <span class="textbox-text-slash">/</span>
                         <span id="terraformedEconomy" class="terraformed-number">{{ terraformedResources.economy
-                            }}</span>
+                        }}</span>
                         <span id="terraformedIndustry" class="terraformed-number">{{ terraformedResources.industry
-                            }}</span>
+                        }}</span>
                         <span id="terraformedScience">{{ terraformedResources.science }}</span>
                     </div>
                 </div>
@@ -275,6 +278,10 @@
         <change-field-menu :object-type="'Star'" :object-property-name="'ID'" :return-to-previous-on-update="true"
             :starting-value="starData.id" :errors="changeIdErrors" v-if="editingId" v-on:returnToMenu="onReturnToMenu"
             v-on:updateField="(field: string | undefined, value: string) => onUpdateId(value)" />
+        <change-field-menu :object-type="'Star'" :object-property-name="'Name'" :return-to-previous-on-update="true"
+            :starting-value="starData.name" :errors="changeNameErrors" v-if="editingName"
+            v-on:returnToMenu="onReturnToMenu"
+            v-on:updateField="(field: string | undefined, value: string | null) => onUpdateName(value)" />
 
         <confirmation-modal modalName="deleteStarModal" titleText="Delete Star" cancelText="No" confirmText="Yes"
             @onConfirm="confirmDeletion">
@@ -340,10 +347,13 @@ export default {
             selectionPlayers: helper.selectionPlayers(),
             selectionSpecialists: helper.selectionSpecialists(useSpecialistsStore().getValidStarSpecialists()),
             editingId: false,
+            editingName: false,
             deleteStarModal: null as Modal | null,
             modalText: undefined as string | undefined,
             changeIdErrors: [] as string[],
-            errors: [] as string[]
+            changeNameErrors: [] as string[],
+            errors: [] as string[],
+            allowEditingId: storage.getSettings().technical.allowChangeId === 'enabled'
         }
     },
     methods: {
@@ -415,8 +425,12 @@ export default {
         },
         onReturnToMenu() {
             this.editingId = false;
+            this.editingName = false;
             for (const e in this.changeIdErrors) { // Actually updates prop of ChangeFieldMenu
                 this.changeIdErrors.pop();
+            }
+            for (const e in this.changeNameErrors) {
+                this.changeNameErrors.pop();
             }
         },
         onUpdateId(value: string) {
@@ -436,6 +450,22 @@ export default {
             editor.updateStarId(this.starData);
 
             this.$toast.default(`Changed star ID to ${this.starData.id}.`);
+        },
+        onUpdateName(value: string | null | undefined) {
+            for (const e in this.changeNameErrors) {
+                this.changeNameErrors.pop();
+            }
+            if (value == null) value = undefined;
+
+            useGalaxyStore().updateStarProperty(this.starData, 'name', value);
+            this.starData.name = value;
+            editor.updateStarName(this.starData);
+
+            if (value) {
+                this.$toast.default(`Changed star name to ${this.starData.name}.`);
+            } else {
+                this.$toast.default(`Cleared star name.`);
+            }
         },
         addCarrier() {
             const newCarrier = editor.createCarrierAtStar(this.starData);
@@ -530,7 +560,7 @@ export default {
                 editor.reloadStar(destinationStar);
                 editor.updateWormholes();
             }
-            
+
             if (this.starData.wormHoleToStarId != null && !deleteOnly) {
                 const destinationStar = this.galaxy.stars.find(s => s.id === this.starData.wormHoleToStarId);
                 if (destinationStar != null) {
@@ -605,7 +635,12 @@ export default {
         },
         title: function () {
             if (this.star == null) return;
+            if (this.star.name) return;
             return `Star ${this.star.id}`;
+        },
+        isNamed: function () {
+            if (this.star?.name) return true;
+            return false;
         },
         isDeadStar: function () {
             const isDead = helper.isDeadStar(this.starData);

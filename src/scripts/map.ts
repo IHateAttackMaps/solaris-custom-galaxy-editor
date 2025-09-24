@@ -647,6 +647,18 @@ class GalaxyMap extends EventEmitter {
         }
     }
 
+    _updateStarName(star: StarObject, newName?: string) {
+        star.updateName(newName);
+    }
+
+    updateStarName(starData: Star) {
+        const existing = this.stars.find(x => x.data!.id === starData.id);
+
+        if (existing) {
+            this._updateStarName(existing, starData.name);
+        }
+    }
+
     _transformStar(star: StarObject) {
         star.updatePosition();
     }

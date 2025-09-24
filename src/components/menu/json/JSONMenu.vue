@@ -729,6 +729,7 @@ export default {
                 if (waypoint.destination != null && typeof waypoint.destination === 'number') waypoint.destination = String(waypoint.destination);
                 waypoint.action = waypoint.action == null ? 'collectAll' : waypoint.action;
                 waypoint.actionShips = waypoint.actionShips == null ? 0 : waypoint.actionShips;
+                waypoint.delayTicks = waypoint.delayTicks == null ? 0 : waypoint.delayTicks;
 
                 if (!this.checkWaypointProperty(waypoint, 'source', 'string', false)) return;
                 if (!this.checkWaypointProperty(waypoint, 'destination', 'string', false)) return;
@@ -892,8 +893,8 @@ export default {
         checkStarProperty(star: any, property: string, type: string, allowNull?: boolean, allowUndefined?: boolean) {
             return this.checkObjectProperty(star, 'star', property, type, allowNull, allowUndefined)
         },
-        checkCarrierProperty(star: any, property: string, type: string, allowNull?: boolean, allowUndefined?: boolean) {
-            return this.checkObjectProperty(star, 'carrier', property, type, allowNull, allowUndefined)
+        checkCarrierProperty(carrier: any, property: string, type: string, allowNull?: boolean, allowUndefined?: boolean) {
+            return this.checkObjectProperty(carrier, 'carrier', property, type, allowNull, allowUndefined)
         },
         checkPlayerProperty(player: any, property: string, type: string, allowNull?: boolean, allowUndefined?: boolean) {
             return this.checkObjectProperty(player, 'player', property, type, allowNull, allowUndefined);

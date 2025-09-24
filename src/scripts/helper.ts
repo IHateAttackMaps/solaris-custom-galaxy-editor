@@ -1,5 +1,5 @@
 import type { Sprite } from "pixi.js";
-import Map from "./map";
+import GalaxyMap from "./map";
 import type { Location } from "./types/Location"
 import type { Star, TerraformedResources } from "./types/Star";
 import type { Carrier } from "./types/Carrier";
@@ -185,17 +185,17 @@ class HelperService {
     }
 
     getScanningLevelByDistance(distance: number) {
-        const distancePerLevel = Math.ceil(distance / Map.lightYearDistance - 1);
+        const distancePerLevel = Math.ceil(distance / GalaxyMap.lightYearDistance - 1);
         return distancePerLevel || 1;
     }
 
     getHyperspaceLevelByDistance(distance: number) {
-        const distancePerLevel = Math.ceil(distance / Map.lightYearDistance - 1.5);
+        const distancePerLevel = Math.ceil(distance / GalaxyMap.lightYearDistance - 1.5);
         return distancePerLevel || 1;
     }
 
     getHyperspaceDistance(carrier: Carrier) {
-        return ((this.getEffectiveTechs(carrier)?.hyperspace || 1) + 1.5) * Map.lightYearDistance;
+        return ((this.getEffectiveTechs(carrier)?.hyperspace || 1) + 1.5) * GalaxyMap.lightYearDistance;
     }
 
     isStarPairWormHole(sourceStar: Star, destinationStar: Star) {
@@ -422,7 +422,7 @@ class HelperService {
         const baseSpeed = storage.getSettings().carriers.baseCarrierSpeed;
         let speedModifier = carrier.specialist?.modifiers.local?.speed;
         if (speedModifier == null) speedModifier = 1;
-        if (isWarp) speedModifier = speedModifier * Map.warpSpeedMultiplier;
+        if (isWarp) speedModifier = speedModifier * GalaxyMap.warpSpeedMultiplier;
         const remainingDistance = this.getDistanceBetweenLocations(sourceStar.location, destinationStar.location) * (1 - progress);
         return this.getTicksByDistance(baseSpeed, remainingDistance, speedModifier);
     }

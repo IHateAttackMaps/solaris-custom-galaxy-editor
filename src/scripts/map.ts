@@ -23,7 +23,7 @@ interface Chunk extends Container {
     visualizer?: Graphics;
 }
 
-class Map extends EventEmitter {
+class GalaxyMap extends EventEmitter {
     static chunkSize = 1024;
     static lightYearDistance = 50;
     static warpSpeedMultiplier = 3;
@@ -311,7 +311,7 @@ class Map extends EventEmitter {
             star.on('onStarMouseOut', this.onStarMouseOut.bind(this));
         }
 
-        star.setup(starData, userSettings, Map.lightYearDistance, interactive);
+        star.setup(starData, userSettings, GalaxyMap.lightYearDistance, interactive);
 
         return star;
     }
@@ -410,11 +410,11 @@ class Map extends EventEmitter {
         const maxX = helper.calculateMaxStarX();
         const maxY = helper.calculateMaxStarY();
 
-        this.firstChunkX = Math.floor(minX / Map.chunkSize);
-        this.firstChunkY = Math.floor(minY / Map.chunkSize);
+        this.firstChunkX = Math.floor(minX / GalaxyMap.chunkSize);
+        this.firstChunkY = Math.floor(minY / GalaxyMap.chunkSize);
 
-        this.lastChunkX = Math.floor(maxX / Map.chunkSize);
-        this.lastChunkY = Math.floor(maxY / Map.chunkSize);
+        this.lastChunkX = Math.floor(maxX / GalaxyMap.chunkSize);
+        this.lastChunkY = Math.floor(maxY / GalaxyMap.chunkSize);
 
         this.numof_chunkX = this.lastChunkX - this.firstChunkX + 1;
         this.numof_chunkY = this.lastChunkY - this.firstChunkY + 1;
@@ -438,8 +438,8 @@ class Map extends EventEmitter {
                     chunkVisualizer.zIndex = -10;
                     chunkVisualizer.alpha = 0.5;
                     chunkVisualizer.rect(
-                        (this.firstChunkX + ix) * Map.chunkSize, (this.firstChunkY + iy) * Map.chunkSize,
-                        Map.chunkSize, Map.chunkSize
+                        (this.firstChunkX + ix) * GalaxyMap.chunkSize, (this.firstChunkY + iy) * GalaxyMap.chunkSize,
+                        GalaxyMap.chunkSize, GalaxyMap.chunkSize
                     );
                     chunkVisualizer.stroke({ width: 4, color: 0xFF0000, alpha: 1 });
                     this.chunks[ix][iy].addChild(chunkVisualizer);
@@ -455,8 +455,8 @@ class Map extends EventEmitter {
     }
 
     addContainerToChunk(mapObject: StarObject | CarrierObject, chunks: Chunk[][]) { // Star or carrier
-        const chunkX = Math.floor(mapObject.data!.location.x / Map.chunkSize);
-        const chunkY = Math.floor(mapObject.data!.location.y / Map.chunkSize);
+        const chunkX = Math.floor(mapObject.data!.location.x / GalaxyMap.chunkSize);
+        const chunkY = Math.floor(mapObject.data!.location.y / GalaxyMap.chunkSize);
 
         if (chunkX < this.firstChunkX || chunkX > this.lastChunkX || chunkY < this.firstChunkY || chunkY > this.lastChunkY) {
             this._setupChunks();
@@ -471,8 +471,8 @@ class Map extends EventEmitter {
     }
 
     removeContainerFromChunk(mapObject: StarObject | CarrierObject, chunks: Chunk[][]) {
-        const chunkX = Math.floor(mapObject.data!.location.x / Map.chunkSize);
-        const chunkY = Math.floor(mapObject.data!.location.y / Map.chunkSize);
+        const chunkX = Math.floor(mapObject.data!.location.x / GalaxyMap.chunkSize);
+        const chunkY = Math.floor(mapObject.data!.location.y / GalaxyMap.chunkSize);
         const ix = chunkX - this.firstChunkX;
         const iy = chunkY - this.firstChunkY;
 
@@ -895,11 +895,11 @@ class Map extends EventEmitter {
 
         //chunk culling
 
-        const firstX = Math.floor(this.editor.viewport!.left / Map.chunkSize);
-        const firstY = Math.floor(this.editor.viewport!.top / Map.chunkSize);
+        const firstX = Math.floor(this.editor.viewport!.left / GalaxyMap.chunkSize);
+        const firstY = Math.floor(this.editor.viewport!.top / GalaxyMap.chunkSize);
 
-        const lastX = Math.floor(this.editor.viewport!.right / Map.chunkSize);
-        const lastY = Math.floor(this.editor.viewport!.bottom / Map.chunkSize);
+        const lastX = Math.floor(this.editor.viewport!.right / GalaxyMap.chunkSize);
+        const lastY = Math.floor(this.editor.viewport!.bottom / GalaxyMap.chunkSize);
 
         const positionChanging = this.lastViewportCenter == null || this.currentViewportCenter.x !== this.lastViewportCenter.x || this.currentViewportCenter.y !== this.lastViewportCenter.y;
         const zoomChanging = Math.abs(this.zoomPercent - this.lastZoomPercent) > (1.0 / 128.0);
@@ -1296,4 +1296,4 @@ class Map extends EventEmitter {
     }
 }
 
-export default Map;
+export default GalaxyMap;

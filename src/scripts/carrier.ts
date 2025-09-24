@@ -28,7 +28,6 @@ class CarrierObject extends EventEmitter {
     colour: ColorSource | null;
 
     pathManager: PathManager | null;
-    pathIDs: string[];
 
     data: Carrier | null;
     userSettings: Settings | null;
@@ -61,7 +60,6 @@ class CarrierObject extends EventEmitter {
         this.container.on('mouseout', this.onMouseOut.bind(this));
 
         this.pathManager = null;
-        this.pathIDs = [];
 
         this.isMouseOver = false;
         this.zoomPercent = 100;
@@ -240,10 +238,7 @@ class CarrierObject extends EventEmitter {
     }
 
     clearPaths() {
-        for (const pathID of this.pathIDs) {
-            this.pathManager!.removePath(pathID, this);
-        }
-        this.pathIDs = [];
+        this.pathManager!.removePaths(this);
     }
 
     _isSourceLastDestination() {
@@ -273,9 +268,9 @@ class CarrierObject extends EventEmitter {
             if (!star) break;
 
             if (lastPoint == null) {
-                this.pathIDs.push(this.pathManager!.addPath(this.data!, star, this));
+                this.pathManager!.addPath(this.data!, star, this);
             } else {
-                this.pathIDs.push(this.pathManager!.addPath(lastPoint, star, this));
+                this.pathManager!.addPath(lastPoint, star, this);
             }
 
             lastPoint = star;
@@ -285,7 +280,7 @@ class CarrierObject extends EventEmitter {
             if (!sourceIsLastDestination && this.data!.waypoints && this.data!.waypoints.length) {
                 const firstPoint = this._getStars().find(s => s.id === this.data!.waypoints[0].destination);
                 if (firstPoint && lastPoint && firstPoint !== lastPoint) {
-                    this.pathIDs.push(this.pathManager!.addPath(star!, firstPoint, this));
+                    this.pathManager!.addPath(star!, firstPoint, this);
                 }
             }
         }

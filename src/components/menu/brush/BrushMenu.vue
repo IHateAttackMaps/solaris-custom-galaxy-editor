@@ -120,7 +120,7 @@ import editor from '@/scripts/editor';
 import MenuTitle from '../MenuTitle.vue';
 import { storeToRefs } from 'pinia';
 import { useGalaxyStore } from '@/stores/galaxy';
-import Map from '@/scripts/map';
+import GalaxyMap from '@/scripts/map';
 import type { Point } from 'pixi.js';
 import helper from '@/scripts/helper';
 import type { Star } from '@/scripts/types/Star';
@@ -158,7 +158,7 @@ export default {
         },
         onBrushChanged() {
             if (Number.isNaN(Number.parseFloat(this.brushRadius.toString())) || this.brushRadius < 0) return;
-            editor.map!.updateBrush(this.brushRadius * Map.lightYearDistance, this.brushShape);
+            editor.map!.updateBrush(this.brushRadius * GalaxyMap.lightYearDistance, this.brushShape);
         },
         onBrushClick(pos: Point, star: Star | null, fromInversion: boolean = false) {
             if (this.inverted && !fromInversion) {
@@ -173,7 +173,7 @@ export default {
             switch (this.brushShape) {
                 case 'circle':
                     for (let i = 0; i < this.starAmount; i++) {
-                        const r = (this.brushRadius * Map.lightYearDistance) * Math.sqrt(Math.random());
+                        const r = (this.brushRadius * GalaxyMap.lightYearDistance) * Math.sqrt(Math.random());
                         const theta = Math.random() * 2.0 * Math.PI;
                         const x = pos.x + r * Math.cos(theta);
                         const y = pos.y + r * Math.sin(theta);
@@ -190,7 +190,7 @@ export default {
                     }
                     break;
                 case 'square':
-                    const r = (this.brushRadius * Map.lightYearDistance);
+                    const r = (this.brushRadius * GalaxyMap.lightYearDistance);
                     for (let i = 0; i < this.starAmount; i++) {
                         const x = (pos.x - r) + Math.random() * 2.0 * r;
                         const y = (pos.y - r) + Math.random() * 2.0 * r;
@@ -219,7 +219,7 @@ export default {
             if (star != null) {
                 starsForDeletion.push(star);
             } else {
-                const r = (this.brushRadius * Map.lightYearDistance);
+                const r = (this.brushRadius * GalaxyMap.lightYearDistance);
                 switch (this.brushShape) {
                     case 'circle':
                         starsForDeletion = this.galaxy.stars.filter(s => ((pos.x - s.location.x) ** 2 + (pos.y - s.location.y) ** 2) <= r ** 2);
@@ -343,8 +343,8 @@ export default {
             if (this.snapTarget) targetStarLoc = helper.getStarById(this.snapTarget)?.location;
 
             editor.setModeArgs([
-                this.brushRadius * Map.lightYearDistance, this.starAmount, this.snapMode, targetStarLoc,
-                this.snapRadius * Map.lightYearDistance, this.snapSteps, this.stepOffset * (Math.PI / 180)
+                this.brushRadius * GalaxyMap.lightYearDistance, this.starAmount, this.snapMode, targetStarLoc,
+                this.snapRadius * GalaxyMap.lightYearDistance, this.snapSteps, this.stepOffset * (Math.PI / 180)
             ]);
         }
     },
@@ -358,8 +358,8 @@ export default {
         editor.map!.on('onBrushClick', this.brushClickHandler);
         editor.map!.on('onBrushRightClick', this.brushRightClickHandler);
         editor.setMode('brush', [
-            this.brushRadius * Map.lightYearDistance, this.starAmount, this.snapMode, undefined,
-            this.snapRadius * Map.lightYearDistance, this.snapSteps, this.stepOffset * (Math.PI / 180)
+            this.brushRadius * GalaxyMap.lightYearDistance, this.starAmount, this.snapMode, undefined,
+            this.snapRadius * GalaxyMap.lightYearDistance, this.snapSteps, this.stepOffset * (Math.PI / 180)
         ]);
 
         if (this.snapTargetMode === 'auto') {

@@ -3,7 +3,7 @@ import helper from './helper';
 import { EventEmitter } from "events";
 import type { Settings } from './types/Settings';
 import type { Carrier } from './types/Carrier';
-import Map from './map';
+import GalaxyMap from './map';
 import type { Location } from './types/Location';
 import type { CarrierWaypoint } from './types/CarrierWaypoint';
 import { useGalaxyStore } from '@/stores/galaxy';
@@ -34,7 +34,7 @@ class Waypoints extends EventEmitter {
     }
 
     setup() {
-        this.lightYearDistance = Map.lightYearDistance;
+        this.lightYearDistance = GalaxyMap.lightYearDistance;
     }
 
     clear() {

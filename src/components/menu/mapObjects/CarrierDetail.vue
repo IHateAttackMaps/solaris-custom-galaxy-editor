@@ -300,7 +300,7 @@ import { useMenuStateStore } from '@/stores/menuState';
 import ConfirmationModal from '../../modal/ConfirmationModal.vue';
 import { Modal } from 'bootstrap';
 import storage from '@/scripts/storage';
-import Map from '@/scripts/map';
+import GalaxyMap from '@/scripts/map';
 import type { Star } from '@/scripts/types/Star';
 
 export default {
@@ -555,7 +555,7 @@ export default {
 
             let distance = helper.getDistanceBetweenLocations(sourceLoc, destinationLoc);
 
-            distance = Math.round(distance / Map.lightYearDistance * 100.0) / 100.0;
+            distance = Math.round(distance / GalaxyMap.lightYearDistance * 100.0) / 100.0;
 
             return distance.toFixed(2);
         },

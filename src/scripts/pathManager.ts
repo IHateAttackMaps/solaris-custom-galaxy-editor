@@ -1,7 +1,7 @@
 import { Container, Graphics, type ColorSource } from 'pixi.js';
 import helper from './helper';
 import type { Settings } from './types/Settings';
-import Map from './map';
+import GalaxyMap from './map';
 import type CarrierObject from './carrier';
 import type { Location } from './types/Location';
 import type { Viewport } from 'pixi-viewport';
@@ -30,11 +30,11 @@ class PathManager {
     minScale: number;
     maxScale: number;
 
-    paths: { id: String, carriers: String[], graphics: Graphics, pointA: Location, pointB: Location }[];
+    paths: Map<CarrierObject, { graphics: Graphics, pointA: Location, pointB: Location }[]>;
 
     constructor() {
         this.zoomPercent = 100;
-        this.chunkSize = Map.chunkSize;
+        this.chunkSize = GalaxyMap.chunkSize;
 
         this.container = new Container({ isRenderGroup: true });
         this.chunksContainer = null;
@@ -45,7 +45,7 @@ class PathManager {
 
         this.userSettings = null;
 
-        this.paths = [];
+        this.paths = new Map();
 
         this.clampedScaling = false;
         this.baseScale = NaN;
@@ -61,7 +61,7 @@ class PathManager {
         this.userSettings = userSettings;
         this._loadSettings();
 
-        this.paths = [];
+        this.paths.clear();
         /*
          * {
          *  id: mapObject1.id + " + mapObject2.id
@@ -117,7 +117,9 @@ class PathManager {
             }
         }
 
-        this.paths.forEach(p => this.addPathToChunk(p.graphics, p.pointA, p.pointB));
+        for (let paths of this.paths.values()) {
+            paths.forEach(p => this.addPathToChunk(p.graphics, p.pointA, p.pointB));
+        }
     }
 
     _loadSettings() {
@@ -128,61 +130,47 @@ class PathManager {
     }
 
     addPath(objectA: Star | Carrier, objectB: Star | Carrier, carrierMapObject: CarrierObject) {
-        const mapObjects = [objectA, objectB];
-        this._orderObjects(mapObjects);
+        const PATH_WIDTH = 0.5 * this.userSettings!.visual.carrierPathWidth;
+        const looped = carrierMapObject.data!.waypointsLooped;
+        const lineAlpha = looped ? 0.5 : 0.5;
 
-        const pathID = mapObjects[0].id + "\"" + mapObjects[1].id; // The " symbol is used because it cannot be inputted into the JSON by the user.
-        let path = this._findPath(pathID);
-
-        if (!path) {
-            const PATH_WIDTH = 0.5 * this.userSettings!.visual.carrierPathWidth;
-            const looped = carrierMapObject.data!.waypointsLooped;
-            const lineAlpha = looped ? 0.5 : 0.5;
-
-            let graphics: Graphics;
-            if (looped) {
-                graphics = this._createLoopedPathGraphics(mapObjects[0], mapObjects[1], carrierMapObject.colour!);
-            } else {
-                const lineWidth = PATH_WIDTH;
-                graphics = this._createSolidPathGraphics(lineWidth, mapObjects[0], mapObjects[1], carrierMapObject.colour!);
-            }
-            graphics.alpha = lineAlpha;
-
-            path = {
-                id: pathID,
-                carriers: [],
-                graphics: graphics,
-                pointA: objectA.location,
-                pointB: objectB.location
-            };
-            this.paths.push(path);
+        let graphics: Graphics;
+        if (looped) {
+            graphics = this._createLoopedPathGraphics(objectA, objectB, carrierMapObject.colour!);
+        } else {
+            const lineWidth = PATH_WIDTH;
+            graphics = this._createSolidPathGraphics(lineWidth, objectA, objectB, carrierMapObject.colour!);
         }
+        graphics.alpha = lineAlpha;
 
-        if (!this._pathContainsCarrier(carrierMapObject, path)) {
-            path.carriers.push(carrierMapObject.data!.id);
+        const path = {
+            graphics: graphics,
+            pointA: objectA.location,
+            pointB: objectB.location
+        };
+
+        if (this.paths.has(carrierMapObject)) {
+            this.paths.get(carrierMapObject)!.push(path);
+        } else {
+            this.paths.set(carrierMapObject, [path]);
         }
-
-        return pathID;
     }
 
-    removePath(pathID: string, carrier: CarrierObject) {
-        const path = this._findPath(pathID);
-        if (path) {
-            const pathGraphics = path.graphics;
-            const carrierIndex = path.carriers.indexOf(carrier.data!.id);
-            if (carrierIndex >= 0) {
-                path.carriers.splice(carrierIndex, 1);
-            }
-            if (path.carriers.length === 0) {
-                if ((pathGraphics as any).chunk) {
-                    (pathGraphics as any).chunk.removeChild(pathGraphics);
-                }
-                else {
-                    this.chunklessContainer!.removeChild(pathGraphics);
-                }
-                this.paths.splice(this.paths.indexOf(path), 1);
+    removePaths(carrierMapObject: CarrierObject, pathsToKeep: number = 0) {
+        const paths = this.paths.get(carrierMapObject);
+        if (!paths) return;
+
+        for (let i = pathsToKeep; i < paths.length; i++) {
+            const pathGraphics = paths[i].graphics;
+
+            if ((pathGraphics as any).chunk) {
+                (pathGraphics as any).chunk.removeChild(pathGraphics);
+            } else {
+                this.chunklessContainer!.removeChild(pathGraphics);
             }
         }
+
+        paths.length = pathsToKeep;
     }
 
     addPathToChunk(pathGraphics: Graphics, locA: Location, locB: Location) {
@@ -345,25 +333,6 @@ class PathManager {
         this.addPathToChunk(path, pointA, pointB);
         return path;
     }
-
-    _orderObjects(mapObjects: any[]) {
-        if (mapObjects[1].id > mapObjects[0].id) {
-            const firstMapObject = mapObjects[0];
-            mapObjects[0] = mapObjects[1];
-            mapObjects[1] = firstMapObject;
-        }
-    }
-
-    _pathContainsCarrier(carrierMapObject: CarrierObject, path: any) {
-        const carrier = path.carriers.find((c: string) => c === carrierMapObject.data!.id);
-        return carrier;
-    }
-
-    _findPath(pathID: string) {
-        const path = this.paths.find(p => p.id === pathID);
-        return path;
-    }
-
 }
 
 export default PathManager;

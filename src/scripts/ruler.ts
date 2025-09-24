@@ -1,6 +1,6 @@
 import { Circle, Container, Graphics } from "pixi.js";
 import { EventEmitter } from "events";
-import Map from './map';
+import GalaxyMap from './map';
 import type { RulerPoint } from './types/RulerPoint';
 import helper from './helper';
 
@@ -21,7 +21,7 @@ class RulerService extends EventEmitter {
         this.container = new Container();
         this.container.hitArea = new Circle(0, 0, 0);
 
-        this.lightYearDistance = Map.lightYearDistance;
+        this.lightYearDistance = GalaxyMap.lightYearDistance;
         this.rulerPoints = [];
     }
 

@@ -1,7 +1,7 @@
 import { Application, BitmapText, FederatedPointerEvent, Graphics, type TickerCallback } from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
 import type { Settings } from './types/Settings';
-import Map from './map';
+import GalaxyMap from './map';
 import helper from './helper';
 import textureService from './texture';
 import type { Star } from './types/Star';
@@ -17,7 +17,7 @@ class GalaxyEditor {
     previousDTs: number[];
     ma32accum: number;
 
-    map: Map | null;
+    map: GalaxyMap | null;
     userSettings: Settings | null;
 
     fpsNowText: BitmapText | null;
@@ -122,7 +122,7 @@ class GalaxyEditor {
         });
 
         // Add a new map to the viewport
-        this.map = new Map(this.app!, this);
+        this.map = new GalaxyMap(this.app!, this);
         this.viewport.addChild(this.map.container);
 
         // add the viewport to the stage
@@ -197,7 +197,7 @@ class GalaxyEditor {
             this.scaleText.x = left;
             this.scaleText.y = nextAvailY;
             this.scaleBar = new Graphics();
-            this.scaleBar.rect(0, 0, Map.lightYearDistance, this.scaleText.height / 4);
+            this.scaleBar.rect(0, 0, GalaxyMap.lightYearDistance, this.scaleText.height / 4);
             this.scaleBar.fill(0xFFFFFF);
             this.scaleBar.x = left + this.scaleText.width + 8;
             this.scaleBar.y = nextAvailY + (this.scaleText.height - this.scaleBar.height) / 2;

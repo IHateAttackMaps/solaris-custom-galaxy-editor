@@ -144,7 +144,7 @@ import editor from '@/scripts/editor';
 import helper from '@/scripts/helper';
 import MenuTitle from '../MenuTitle.vue';
 import type { RulerPoint } from '@/scripts/types/RulerPoint';
-import Map from '@/scripts/map';
+import GalaxyMap from '@/scripts/map';
 import { storeToRefs } from 'pinia';
 import storage from '@/scripts/storage';
 import { useGalaxyStore } from '@/stores/galaxy';
@@ -245,7 +245,7 @@ export default {
         },
         recalculateETAs() {
             const totalTicks = helper.getTicksBetweenObjects(this.baseSpeed, this.points, this.speedModifier);
-            const totalTicksWarp = helper.getTicksBetweenObjects(this.baseSpeed, this.points, Map.warpSpeedMultiplier * this.speedModifier);
+            const totalTicksWarp = helper.getTicksBetweenObjects(this.baseSpeed, this.points, GalaxyMap.warpSpeedMultiplier * this.speedModifier);
 
             this.totalEta = totalTicks.toString();
             this.totalEtaWarp = totalTicksWarp.toString();
@@ -288,7 +288,7 @@ export default {
                 this.distanceLightYears += helper.getDistanceBetweenLocations(this.points[i].location, this.points[i + 1].location);
             }
 
-            this.distanceLightYears = Number.parseFloat((Math.round(this.distanceLightYears / Map.lightYearDistance * 100.0) / 100.0).toFixed(2));
+            this.distanceLightYears = Number.parseFloat((Math.round(this.distanceLightYears / GalaxyMap.lightYearDistance * 100.0) / 100.0).toFixed(2));
         },
         getNextPoint(point: RulerPoint) {
             const i = this.points.indexOf(point);
@@ -300,7 +300,7 @@ export default {
 
             let distance = helper.getDistanceBetweenLocations(this.points[i].location, this.points[i + 1].location);
 
-            distance = Math.round(distance / Map.lightYearDistance * 100.0) / 100.0;
+            distance = Math.round(distance / GalaxyMap.lightYearDistance * 100.0) / 100.0;
 
             return distance.toFixed(2);
         },
@@ -315,7 +315,7 @@ export default {
                 }
             }
 
-            distance = Math.round(distance / Map.lightYearDistance * 100.0) / 100.0;
+            distance = Math.round(distance / GalaxyMap.lightYearDistance * 100.0) / 100.0;
 
             return distance.toFixed(2);
         },

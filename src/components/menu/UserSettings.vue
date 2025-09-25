@@ -804,8 +804,9 @@
                             v-model="settings.carriers.defaultActionShips" />
                     </div>
                 </div>
+            </collapse-panel>
 
-                <h5 class="pt-2">JSON</h5>
+            <collapse-panel title="JSON" :starts-expanded="true">
                 <div class="row pt-1 pb-1">
                     <label for="ignoreCustomNames" class="col-12 col-sm-6 col-form-label">Ignore Custom Names</label>
                     <div class="col-12 col-sm-6">
@@ -836,7 +837,8 @@
                     </div>
                 </div>
                 <div class="row pt-1 pb-1" v-if="settings.json.formatOutput === 'spaces'">
-                    <label for="formatOutputSpaces" class="col-12 col-sm-6 col-form-label sub-option-label">Spaces Per Indent</label>
+                    <label for="formatOutputSpaces" class="col-12 col-sm-6 col-form-label sub-option-label">Spaces Per
+                        Indent</label>
                     <div class="col-12 col-sm-6">
                         <input type="number" min="0" step="1" class="form-control" id="formatOutputSpaces"
                             v-model="settings.json.formatOutputSpaces" />

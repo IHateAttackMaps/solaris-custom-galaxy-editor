@@ -1,7 +1,7 @@
 import type { Settings } from "./types/Settings";
 
 class StorageService {
-    static currentVersion = 2; // Increment when adding new settings
+    static currentVersion = 3; // Increment when adding new settings
 
     settings = {} as Settings;
 
@@ -145,7 +145,9 @@ class StorageService {
             },
             json: {
                 ignoreCustomNames: 'disabled',
-                simplifyIds: 'disabled'
+                simplifyIds: 'disabled',
+                formatOutput: 'disabled',
+                formatOutputSpaces: 4
             },
             ruler: {
                 separateBaseCarrierSpeed: 'disabled',

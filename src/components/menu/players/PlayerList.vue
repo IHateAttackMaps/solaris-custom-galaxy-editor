@@ -13,7 +13,7 @@
                             <option value="id">ID</option>
                             <option value="conquest">Stars</option>
                             <option value="capitalConquest">Capitals</option>
-                            <option value="kingOfTheHill">King Of The Hill</option>
+                            <option value="kingOfTheHill" v-if="isKingOfTheHill">King Of The Hill</option>
                         </select>
                     </div>
                     <div class="col col-1"></div>
@@ -527,6 +527,9 @@ export default {
         },
         sortedTeams: function () {
             return helper.getSortedLeaderboardTeamList(this.sortMode);
+        },
+        isKingOfTheHill: function () {
+            return this.galaxy.stars.findIndex(s => s.isKingOfTheHillStar) !== -1;
         }
     }
 }

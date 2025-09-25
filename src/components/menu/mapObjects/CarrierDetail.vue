@@ -107,23 +107,27 @@
                     </div>
                     <div class="row pb-1" v-if="effectiveTechs != null">
                         <div class="col text-center">
-                            <span title="Weapons when attacking a star"><i class="fas fa-gun"></i><i
-                                    class="fas fa-star"></i>
+                            <span
+                                :title="`Weapons when attacking a star${tooltipAdditionalInfo.get('attackStarWeapons') == null ? '' : '\n' + tooltipAdditionalInfo.get('attackStarWeapons')}`"><i
+                                    class="fas fa-gun"></i><i class="fas fa-star"></i>
                                 {{ attackStarWeapons }}</span>
                         </div>
                         <div class="col text-center">
-                            <span title="Weapons when defending a star"><i class="fas fa-shield"></i><i
-                                    class="fas fa-star"></i>
+                            <span
+                                :title="`Weapons when defending a star${tooltipAdditionalInfo.get('defendStarWeapons') == null ? '' : '\n' + tooltipAdditionalInfo.get('defendStarWeapons')}`"><i
+                                    class="fas fa-shield"></i><i class="fas fa-star"></i>
                                 {{ defendStarWeapons }}</span>
                         </div>
                         <div class="col text-center">
-                            <span title="Weapons in carrier-to-carrier combat"><i class="fas fa-gun"></i><i
-                                    class="fas fa-rocket"></i>
+                            <span
+                                :title="`Weapons in carrier-to-carrier combat${tooltipAdditionalInfo.get('fightCarrierWeapons') == null ? '' : '\n' + tooltipAdditionalInfo.get('fightCarrierWeapons')}`"><i
+                                    class="fas fa-gun"></i><i class="fas fa-rocket"></i>
                                 {{ fightCarrierWeapons }}</span>
                         </div>
                         <div class="col text-center">
-                            <span title="Weapons deducted from enemy in combat"><i class="fas fa-down-long"></i><i
-                                    class="fas fa-gun" id="deductedWeaponsIcon"></i>
+                            <span
+                                :title="`Weapons deducted from enemy in combat${tooltipAdditionalInfo.get('debuffToEnemy') == null ? '' : '\n' + tooltipAdditionalInfo.get('debuffToEnemy')}`"><i
+                                    class="fas fa-down-long"></i><i class="fas fa-gun" id="deductedWeaponsIcon"></i>
                                 {{ weaponsDebuffToEnemy }}</span>
                         </div>
                         <div class="col text-center">
@@ -349,7 +353,8 @@ export default {
             waypointOutOfRangeHandler: null as any,
             editingWaypoints: false,
             hidden: false,
-            allowEditingId: storage.getSettings().technical.allowChangeId === 'enabled'
+            allowEditingId: storage.getSettings().technical.allowChangeId === 'enabled',
+            tooltipAdditionalInfo: new Map<String, String>()
         }
     },
     watch: {
@@ -700,39 +705,44 @@ export default {
         },
         attackStarWeapons: function () {
             if (this.effectiveTechs == null) return NaN;
-            const baseWeapons = this.effectiveTechs.weapons;
-            let attackBonusC2S = 0;
+            let weapons = this.effectiveTechs.weapons;
             let attackBonusC2SPerAlly = 0;
             if (this.carrierData.specialist?.modifiers.local?.carrierToStarCombat?.attacker.weapons) {
-                attackBonusC2S = this.carrierData.specialist.modifiers.local.carrierToStarCombat.attacker.weapons;
+                weapons += this.carrierData.specialist.modifiers.local.carrierToStarCombat.attacker.weapons;
             }
             if (this.carrierData.specialist?.modifiers.local?.carrierToStarCombat?.attacker.weaponsPerAlly) {
                 attackBonusC2SPerAlly = this.carrierData.specialist.modifiers.local.carrierToStarCombat.attacker.weaponsPerAlly;
             }
 
+            weapons = Math.max(weapons, 1);
             if (attackBonusC2SPerAlly !== 0) {
-                return `${baseWeapons + attackBonusC2S} (+${attackBonusC2SPerAlly} per ally)`
-            } else return baseWeapons + attackBonusC2S;
+                this.tooltipAdditionalInfo.set('attackStarWeapons', `+${attackBonusC2SPerAlly} weapons per ally`);
+                return `${weapons}*`;
+            } else {
+                this.tooltipAdditionalInfo.delete('attackStarWeapons');
+            }
+
+            return weapons;
         },
         defendStarWeapons: function () {
             if (this.effectiveTechs == null) return NaN;
-            const baseWeapons = this.effectiveTechs.weapons;
-            let defendBonusC2S = 0;
+            let weapons = this.effectiveTechs.weapons;
             if (this.carrierData.specialist?.modifiers.local?.carrierToStarCombat?.defender?.weapons) {
-                defendBonusC2S = this.carrierData.specialist.modifiers.local.carrierToStarCombat.defender.weapons;
+                weapons += this.carrierData.specialist.modifiers.local.carrierToStarCombat.defender.weapons;
             }
 
-            return baseWeapons + defendBonusC2S;
+            weapons = Math.max(weapons, 1);
+            return weapons;
         },
         fightCarrierWeapons: function () {
             if (this.effectiveTechs == null) return NaN;
-            const baseWeapons = this.effectiveTechs.weapons;
-            let bonusC2C = 0;
+            let weapons = this.effectiveTechs.weapons;
             if (this.carrierData.specialist?.modifiers.local?.carrierToCarrierCombat?.weapons) {
-                bonusC2C = this.carrierData.specialist.modifiers.local.carrierToCarrierCombat.weapons;
+                weapons += this.carrierData.specialist.modifiers.local.carrierToCarrierCombat.weapons;
             }
 
-            return baseWeapons + bonusC2C;
+            weapons = Math.max(weapons, 1);
+            return weapons;
         },
         weaponsDebuffToEnemy: function () {
             let debuff = 0;

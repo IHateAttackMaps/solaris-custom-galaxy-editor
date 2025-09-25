@@ -71,7 +71,10 @@ export default {
             json: {} as any,
             errors: [] as Array<string>,
             warnings: [] as Array<string>,
-            ignoreCustomNames: storage.getSettings().json.ignoreCustomNames
+            ignoreCustomNames: storage.getSettings().json.ignoreCustomNames,
+            simplifyIdsSetting: storage.getSettings().json.simplifyIds,
+            formatOutputSetting: storage.getSettings().json.formatOutput,
+            spacesPerIndent: storage.getSettings().json.formatOutputSpaces
         }
     },
     methods: {
@@ -487,7 +490,7 @@ export default {
                 if (invalidStars) this.warnings.push(`One or more unowned stars had ships and had to be modified.`);
 
                 // Simplify IDs if applicable
-                if (storage.getSettings().json.simplifyIds === 'enabled') {
+                if (this.simplifyIdsSetting === 'enabled') {
                     const simplifiedGalaxy = this.simplifyIds(stars, carriers, players, teams);
                     stars = simplifiedGalaxy.stars;
                     carriers = simplifiedGalaxy.carriers;
@@ -530,8 +533,14 @@ export default {
                 galaxy.teams?.forEach(t => delete t.name);
             }
 
+            let whitespace = undefined;
+            if (this.formatOutputSetting === 'spaces') {
+                whitespace = this.spacesPerIndent;
+            } else if (this.formatOutputSetting === 'tabs') {
+                whitespace = '\t';
+            }
             // Output JSON structure is 'editor_this'.
-            this.input = JSON.stringify(galaxy);
+            this.input = JSON.stringify(galaxy, undefined, whitespace);
         },
         parseStar(star: any, jsonStructure: JSONStructure) {
             let parsedStar = {} as Star;

@@ -113,7 +113,9 @@ export interface Settings {
     },
     json: {
         simplifyIds: 'enabled' | 'disabled',
-        ignoreCustomNames: 'always' | 'when-importing' | 'disabled'
+        ignoreCustomNames: 'always' | 'when-importing' | 'disabled',
+        formatOutput: 'spaces' | 'tabs' | 'disabled',
+        formatOutputSpaces: number
     },
     ruler: {
         separateBaseCarrierSpeed: 'enabled' | 'disabled'

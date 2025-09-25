@@ -825,6 +825,23 @@
                         </select>
                     </div>
                 </div>
+                <div class="row pt-1 pb-1">
+                    <label for="formatOutput" class="col-12 col-sm-6 col-form-label">Format Generated JSON</label>
+                    <div class="col-12 col-sm-6">
+                        <select class="form-control" id="formatOutput" v-model="settings.json.formatOutput">
+                            <option value="disabled">Disabled</option>
+                            <option value="tabs">With Tabs</option>
+                            <option value="spaces">With Spaces</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1" v-if="settings.json.formatOutput === 'spaces'">
+                    <label for="formatOutputSpaces" class="col-12 col-sm-6 col-form-label sub-option-label">Spaces Per Indent</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="0" step="1" class="form-control" id="formatOutputSpaces"
+                            v-model="settings.json.formatOutputSpaces" />
+                    </div>
+                </div>
             </collapse-panel>
 
             <collapse-panel title="Ruler" :starts-expanded="true">

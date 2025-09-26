@@ -976,6 +976,10 @@ h4 {
     text-overflow: ellipsis;
 }
 
+.table-responsive {
+    overflow-x: hidden;
+}
+
 .table {
     --bs-table-bg: transparent;
     --bs-table-accent-bg: transparent;

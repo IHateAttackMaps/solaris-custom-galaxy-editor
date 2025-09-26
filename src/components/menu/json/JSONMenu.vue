@@ -489,6 +489,20 @@ export default {
                 }
                 if (invalidStars) this.warnings.push(`One or more unowned stars had ships and had to be modified.`);
 
+                // Warn if stars have invalid wormHoleToStarIds and fix it
+                invalidStars = false;
+                const wormHoleStars = stars.filter(s => s.wormHoleToStarId != null);
+                const wormHoleStarMap = wormHoleStars.reduce((map, s) => map.set(s.id, s), new Map<string, Star>());
+                for (const wormHoleStar of wormHoleStars) {
+                    if (wormHoleStarMap.has(wormHoleStar.wormHoleToStarId!) && wormHoleStar.id !== wormHoleStar.wormHoleToStarId) {
+                        // Check if the wormhole target also pairs to this star
+                        if (wormHoleStarMap.get(wormHoleStar.wormHoleToStarId!)?.wormHoleToStarId === wormHoleStar.id) continue;
+                    }
+                    invalidStars = true;
+                    wormHoleStar.wormHoleToStarId = null;
+                }
+                if (invalidStars) this.warnings.push(`One or more stars had an invalid wormhole star ID and had to be modified.`);
+
                 // Simplify IDs if applicable
                 if (this.simplifyIdsSetting === 'enabled') {
                     const simplifiedGalaxy = this.simplifyIds(stars, carriers, players, teams);

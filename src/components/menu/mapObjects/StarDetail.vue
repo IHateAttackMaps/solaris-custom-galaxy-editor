@@ -553,31 +553,31 @@ export default {
             this.deleteStar(true);
         },
         updateWormholes(deleteOnly: boolean = false) {
-            const destinationStar = this.galaxy.stars.find(s => s.wormHoleToStarId === this.starData.id);
-            if (destinationStar != null) { // WH existed and was removed
-                destinationStar.wormHoleToStarId = null;
-                useGalaxyStore().updateStar(destinationStar);
-                editor.reloadStar(destinationStar);
-                editor.updateWormholes();
+            const otherWithWormholeToThis = this.galaxy.stars.find(s => s.wormHoleToStarId === this.starData.id);
+            if (otherWithWormholeToThis != null) { // WH existed and was removed
+                otherWithWormholeToThis.wormHoleToStarId = null;
+                useGalaxyStore().updateStar(otherWithWormholeToThis);
+                editor.reloadStar(otherWithWormholeToThis);
             }
 
             if (this.starData.wormHoleToStarId != null && !deleteOnly) {
                 const destinationStar = this.galaxy.stars.find(s => s.id === this.starData.wormHoleToStarId);
                 if (destinationStar != null) {
                     if (destinationStar.wormHoleToStarId != null) { // Because we can add a WH to a star that is already a WH
-                        const destinationStarWormholeDestination = this.galaxy.stars.find(s => s.id === destinationStar.wormHoleToStarId);
-                        if (destinationStarWormholeDestination != null) {
-                            destinationStarWormholeDestination.wormHoleToStarId = null;
-                            useGalaxyStore().updateStar(destinationStarWormholeDestination);
-                            editor.reloadStar(destinationStarWormholeDestination);
+                        const destinationStarWormholePartner = this.galaxy.stars.find(s => s.id === destinationStar.wormHoleToStarId);
+                        if (destinationStarWormholePartner != null) {
+                            destinationStarWormholePartner.wormHoleToStarId = null;
+                            useGalaxyStore().updateStar(destinationStarWormholePartner);
+                            editor.reloadStar(destinationStarWormholePartner);
                         }
                     }
                     destinationStar.wormHoleToStarId = this.starData.id;
                     useGalaxyStore().updateStar(destinationStar);
                     editor.reloadStar(destinationStar);
                 }
-                editor.updateWormholes();
             }
+
+            editor.updateWormholes();
         },
         validateStar() {
             if (this.errors.length !== 0) this.errors.length = 0;
@@ -590,6 +590,9 @@ export default {
                 if (this.starData.wormHoleToStarId !== '') {
                     const targetStar = helper.getStarById(this.starData.wormHoleToStarId);
                     if (targetStar == null) this.errors.push(`Invalid wormhole star ID.`);
+                    if (this.starData.wormHoleToStarId === this.starData.id) {
+                        this.errors.push(`A star cannot have a wormhole to itself.`);
+                    }
                 } else this.starData.wormHoleToStarId = null;
             }
 

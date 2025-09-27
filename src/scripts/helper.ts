@@ -9,6 +9,7 @@ import type { Player } from './types/Player';
 import { usePlayerColourStore } from '@/stores/colours';
 import storage from "./storage";
 import type { CarrierWaypoint } from "./types/CarrierWaypoint";
+import { GeneratorTypes, type GeneratorType } from "./types/Generator";
 
 class HelperService {
     _getGalaxy() {
@@ -68,25 +69,25 @@ class HelperService {
     calculateSelectionMinX(locs: Location[]) {
         if (!locs.length) return 0;
 
-        return locs.sort((a, b) => a.x - b.x)[0].x;
+        return Math.min(...locs.map(l => l.x));
     }
 
     calculateSelectionMinY(locs: Location[]) {
         if (!locs.length) return 0;
 
-        return locs.sort((a, b) => a.y - b.y)[0].y;
+        return Math.min(...locs.map(l => l.y));
     }
 
     calculateSelectionMaxX(locs: Location[]) {
         if (!locs.length) return 0;
 
-        return locs.sort((a, b) => b.x - a.x)[0].x;
+        return Math.max(...locs.map(l => l.x));
     }
 
     calculateSelectionMaxY(locs: Location[]) {
         if (!locs.length) return 0;
 
-        return locs.sort((a, b) => b.y - a.y)[0].y;
+        return Math.max(...locs.map(l => l.y));
     }
 
     calculateSelectionMidpoint(locs: Location[]): Location {
@@ -194,8 +195,12 @@ class HelperService {
         return distancePerLevel || 1;
     }
 
+    getHyperspaceDistanceByLevel(level: number) {
+        return (level + 1.5) * GalaxyMap.lightYearDistance;
+    }
+
     getHyperspaceDistance(carrier: Carrier) {
-        return ((this.getEffectiveTechs(carrier)?.hyperspace || 1) + 1.5) * GalaxyMap.lightYearDistance;
+        return this.getHyperspaceDistanceByLevel(this.getEffectiveTechs(carrier)?.hyperspace || 1);
     }
 
     isStarPairWormHole(sourceStar: Star, destinationStar: Star) {
@@ -208,7 +213,7 @@ class HelperService {
     }
 
     calculateShortestRoute(carrier: Carrier, sourceStarId: string, destinStarId: string) {
-        const hyperspaceDistance = this.getHyperspaceDistance(carrier)
+        const hyperspaceDistance = this.getHyperspaceDistance(carrier);
 
         const graph = this._getGalaxy().stars.map(s => {
             return {
@@ -218,7 +223,7 @@ class HelperService {
                 neighbors: null as any,
                 parent: null as any
             }
-        })
+        });
 
         const getNeighbors = (node: any) => graph
             .filter(s => s.id !== node.id)
@@ -406,7 +411,7 @@ class HelperService {
     locationToProgressAlongPath(location: Location, sourceLoc: Location, destinationLoc: Location) {
         const deltaX = destinationLoc.x - sourceLoc.x;
         const deltaY = destinationLoc.y - sourceLoc.y;
-        
+
         let progress: number;
         if (deltaX > deltaY) {
             progress = (location.x - sourceLoc.x) / deltaX;
@@ -854,6 +859,82 @@ class HelperService {
         const star = this.getStarById(starId);
         if (star == null) return;
         return star.name ? star.name : star.id;
+    }
+
+    getGeneratorById(id: GeneratorType['id']) {
+        return GeneratorTypes.find(g => g.id === id)!;
+    }
+
+    getRandomAngle(): number {
+        return Math.random() * Math.PI * 2;
+    }
+
+    getRandomRadius(maxRadius: number, offset: number): number {
+        return maxRadius * Math.random() ** offset;
+    }
+
+    getRandomRadiusInRange(minRadius: number, maxRadius: number): number {
+        return (Math.random() * (maxRadius ** 2 - minRadius ** 2) + minRadius ** 2) ** 0.5;
+    }
+
+    getRandomPositionInCircle(maxRadius: number, offset: number = 0.5): Location {
+        let angle = this.getRandomAngle();
+        let radius = this.getRandomRadius(maxRadius, offset);
+
+        return {
+            x: Math.cos(angle) * radius,
+            y: Math.sin(angle) * radius
+        };
+    }
+
+    getRandomPositionInDoughnut(minRadius: number, maxRadius: number): Location {
+        let angle = this.getRandomAngle();
+        let radius = this.getRandomRadiusInRange(minRadius, maxRadius)
+
+        return {
+            x: Math.cos(angle) * radius,
+            y: Math.sin(angle) * radius
+        };
+    }
+
+    isLocationTooClose(location: Location, otherLocation: Location) {
+        const distance = this.getDistanceBetweenLocations(location, otherLocation);
+
+        return distance < storage.getSettings().generation.minDistanceBetweenStars;
+    }
+
+    isLocationTooCloseToOthers(location: Location, locations: Location[]) {
+        return locations.find(l => this.isLocationTooClose(location, l)) != null;
+    }
+
+    getMaxSelectionDiameter(locations: Location[]) {
+        // This is a more accurate approach
+        /*
+        const center = helper.calculateSelectionCentroid(locations);
+        const diameter = helper.calculateSelectionRadiusFromPoint(locations, center) * 2;
+        */
+
+        // This is what Solaris uses, so it will be used here as well
+        const minX = this.calculateSelectionMinX(locations);
+        const minY = this.calculateSelectionMinY(locations);
+        const maxX = this.calculateSelectionMaxX(locations);
+        const maxY = this.calculateSelectionMaxY(locations);
+        const diameterX = maxX - minX;
+        const diameterY = maxY - minY;
+        const diameter = diameterX > diameterY ? diameterX : diameterY;
+
+        return diameter;
+    }
+
+    getClosestLocations(loc: Location, locs: Location[], amount: number): Location[] {
+        let sorted = locs
+            .filter(a => a.x !== loc.x && a.y !== loc.y) // Ignore the location passed in if it exists in the array.
+            .sort((a, b) => {
+                return this.getDistanceBetweenLocations(loc, a)
+                    - this.getDistanceBetweenLocations(loc, b);
+            });
+
+        return sorted.slice(0, amount);
     }
 }
 

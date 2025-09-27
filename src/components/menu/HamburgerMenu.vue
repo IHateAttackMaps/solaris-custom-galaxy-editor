@@ -29,6 +29,10 @@
                 <i class="fas fa-file-lines"></i>
                 JSON
             </a>
+            <a class="dropdown-item" v-on:click="setMenu('generate')" title="Generate (G)">
+                <i class="fas fa-code"></i>
+                Generate
+            </a>
             <a class="dropdown-item" v-on:click="setMenu('ruler')" title="Ruler (V)">
                 <i class="fas fa-ruler"></i>
                 Ruler

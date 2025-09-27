@@ -18,6 +18,7 @@
         <randomise-menu v-if="menuState === 'randomise'" class="menu menu-bg" />
         <select-menu v-if="menuState === 'select'" ref="selectRef" class="menu menu-bg" />
         <transform-menu v-if="menuState === 'transform'" class="menu menu-bg" />
+        <generate-menu v-if="menuState === 'generate'" class="menu menu-bg" />
         <footer-menu />
     </div>
 </template>
@@ -42,6 +43,7 @@ import BrushMenu from './brush/BrushMenu.vue';
 import RandomiseMenu from './randomise/RandomiseMenu.vue';
 import SelectMenu from './select/SelectMenu.vue';
 import TransformMenu from './transform/TransformMenu.vue';
+import GenerateMenu from './generate/GenerateMenu.vue';
 
 export default {
     components: {
@@ -59,7 +61,8 @@ export default {
         'brush-menu': BrushMenu,
         'randomise-menu': RandomiseMenu,
         'select-menu': SelectMenu,
-        'transform-menu': TransformMenu
+        'transform-menu': TransformMenu,
+        'generate-menu': GenerateMenu
     },
     data() {
         return {
@@ -86,9 +89,9 @@ export default {
 
             if (e.altKey || e.shiftKey || e.ctrlKey || e.metaKey) {
                 if (key === 'Shift') {
-                    if (this.menuState === 'brush') editor.map!.setModeArg(2, 'radius_only');
+                    if (this.menuState === 'brush' && this.galaxyIsReady) editor.map!.setModeArg(2, 'radius_only');
                 } else if (key === 'Control') {
-                    if (this.menuState === 'brush') editor.map!.setModeArg(2, 'radius_and_angle');
+                    if (this.menuState === 'brush' && this.galaxyIsReady) editor.map!.setModeArg(2, 'radius_and_angle');
                 }
                 return;
             }
@@ -118,6 +121,9 @@ export default {
                 case 'r':
                     useMenuStateStore().toggleMenuState('randomise');
                     break;
+                case 'g':
+                    useMenuStateStore().toggleMenuState('generate');
+                    break;
                 case 'j':
                     useMenuStateStore().toggleMenuState('json');
                     break;
@@ -130,7 +136,7 @@ export default {
                     if (this.menuState === 'select') (this.$refs['selectRef'] as typeof SelectMenu).deleteSelected();
                     break;
                 case '.':
-                    if (this.menuState === 'select') (this.$refs['selectRef'] as typeof SelectMenu).togglePaused();
+                    if (this.menuState === 'select' && this.galaxyIsReady) (this.$refs['selectRef'] as typeof SelectMenu).togglePaused();
                     break;
             }
 

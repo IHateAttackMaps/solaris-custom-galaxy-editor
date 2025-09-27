@@ -11,7 +11,8 @@ export const MenuStates = [
     'brush',
     'transform',
     'randomise',
-    'json'
+    'json',
+    'generate'
 ] as const;
 
 export type MenuState = typeof MenuStates[number];

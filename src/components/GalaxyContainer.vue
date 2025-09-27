@@ -86,7 +86,6 @@ export default {
 
     methods: {
         async loadGalaxy() {
-            storage.loadSettings();
             await this.galaxyEditor.setupViewport();
             await this.galaxyEditor.setup(storage.getSettings());
         },

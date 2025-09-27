@@ -98,7 +98,7 @@
                     <div class="col col-flex align-center">
                         <i class="fas fa-house me-1"></i>
                         <p>Capital Star:</p>
-                        <input id="specialistTokens" class="form-control semi-small-input ms-1 me-1" type="text"
+                        <input id="homeStarId" class="form-control semi-small-input ms-1 me-1" type="text"
                             v-model="playerData.homeStarId" :placeholder="'Enter capital star ID here'"
                             ref="homeStarIdInputElement" />
                         <button type="button" class="btn btn-outline-primary btn-ssm" @click="toggleHomeStarSelectMode"
@@ -782,7 +782,8 @@ ul {
 }
 
 #credits,
-#specialistTokens {
+#specialistTokens,
+#homeStarId {
     width: 50% !important;
 }
 

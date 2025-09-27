@@ -7,6 +7,7 @@
             <sidebar-menu-item :menu-state="'transform'" tooltip="Transform (T)" icon-class="fas fa-arrows-spin" />
             <sidebar-menu-item :menu-state="'randomise'" tooltip="Randomise (R)" icon-class="fas fa-dice" />
             <sidebar-menu-item :menu-state="'json'" tooltip="JSON (J)" icon-class="fas fa-file-lines" />
+            <sidebar-menu-item :menu-state="'generate'" tooltip="Generate (G)" icon-class="fas fa-code" />
             <sidebar-menu-item :menu-state="'ruler'" tooltip="Ruler (V)" icon-class="fas fa-ruler" />
         </div>
         <div class="sidebar-menu-bottom">

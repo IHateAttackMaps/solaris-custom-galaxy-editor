@@ -846,11 +846,88 @@
                 </div>
             </collapse-panel>
 
+            <collapse-panel title="Generation" :starts-expanded="true">
+                <div class="row pt-1 pb-1">
+                    <label for="defaultGeneratorId" class="col-12 col-sm-6 col-form-label">Default Generator</label>
+                    <div class="col-12 col-sm-6">
+                        <select class="form-control" id="defaultGeneratorId"
+                            v-model="settings.generation.defaultGeneratorId">
+                            <option value="circular">Circular</option>
+                            <option value="circularBalanced">Circular Balanced</option>
+                            <option value="doughnut">Doughnut</option>
+                            <option value="irregular">Irregular</option>
+                            <option value="spiral">Spiral</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="defaultPlayerCount" class="col-12 col-sm-6 col-form-label">Default Player Count</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="2" step="1" class="form-control" id="defaultPlayerCount"
+                            v-model="settings.generation.defaultPlayerCount" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="defaultStarsPerPlayer" class="col-12 col-sm-6 col-form-label">Default Stars Per
+                        Player</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="1" step="1" class="form-control" id="defaultStarsPerPlayer"
+                            v-model="settings.generation.defaultStarsPerPlayer" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="defaultGeneratePlayers" class="col-12 col-sm-6 col-form-label">Default Generate
+                        Players</label>
+                    <div class="col-12 col-sm-6">
+                        <select class="form-control" id="defaultGeneratePlayers"
+                            v-model="settings.generation.defaultGeneratePlayers">
+                            <option value="disabled">Disabled</option>
+                            <option value="enabled">Enabled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="defaultPlayerDistribution" class="col-12 col-sm-6 col-form-label">Default Player
+                        Distribution</label>
+                    <div class="col-12 col-sm-6">
+                        <select class="form-control" id="defaultPlayerDistribution"
+                            v-model="settings.generation.defaultPlayerDistribution">
+                            <option value="circular">Circular</option>
+                            <option value="circularSequential">Circular Sequential</option>
+                            <option value="random">Random</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="defaultStartingStars" class="col-12 col-sm-6 col-form-label">Default Starting
+                        Stars</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="1" step="1" class="form-control" id="defaultStartingStars"
+                            v-model="settings.generation.defaultStartingStars" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="defaultHyperspaceRange" class="col-12 col-sm-6 col-form-label">Default Initial
+                        Hyperspace Range</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="1" step="1" class="form-control" id="defaultHyperspaceRange"
+                            v-model="settings.generation.defaultHyperspaceRange" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="minDistanceBetweenStars" class="col-12 col-sm-6 col-form-label">Minimum Distance
+                        Between Stars</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="0" step="1" class="form-control" id="minDistanceBetweenStars"
+                            v-model="settings.generation.minDistanceBetweenStars" />
+                    </div>
+                </div>
+            </collapse-panel>
+
             <collapse-panel title="Ruler" :starts-expanded="true">
                 <div class="row pt-1 pb-1">
                     <label for="separateBaseCarrierSpeed" class="col-12 col-sm-6 col-form-label">Separate Default Ruler
-                        Base
-                        Carrier Speed</label>
+                        Base Carrier Speed</label>
                     <div class="col-12 col-sm-6">
                         <select class="form-control" id="separateBaseCarrierSpeed"
                             v-model="settings.ruler.separateBaseCarrierSpeed">

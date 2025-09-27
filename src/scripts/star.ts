@@ -192,6 +192,12 @@ class StarObject extends EventEmitter {
     updateId(id: string) {
         this.data!.id = id;
         this.drawName();
+
+        // Changing ID changes the seed for these visuals
+        this.drawPulsar();
+        this.drawNebula();
+        this.drawAsteroidField();
+
         this.updateVisibility();
     }
 

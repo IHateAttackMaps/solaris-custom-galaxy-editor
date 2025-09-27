@@ -1,7 +1,8 @@
 import type { Settings } from "./types/Settings";
 
 class StorageService {
-    static currentVersion = 3; // Increment when adding new settings
+    static currentVersion = 4; // Increment when adding new settings or changing existing ones
+    static breakingVersion = 1; // Increment when changing existing settings in a way that forces them to be reset
 
     settings = {} as Settings;
 
@@ -15,25 +16,56 @@ class StorageService {
 
     loadSettings() {
         const json = localStorage.getItem('settings');
+        const defaultSettings = this.loadDefaultSettings();
+
         if (!json) {
-            this.settings = this.loadDefaultSettings();
+            this.settings = defaultSettings;
             return;
         }
-        try {
-            this.settings = JSON.parse(json) as Settings;
 
-            if (!this.settings.version || this.settings.version < StorageService.currentVersion) {
-                // Reset stored data when new settings have been added to avoid errors
-                this.settings = this.loadDefaultSettings();
+        try {
+            const loadedSettings = JSON.parse(json) as Settings;
+
+            if (!loadedSettings.version || loadedSettings.version < StorageService.currentVersion) {
+                if (!loadedSettings.breakingVersion || loadedSettings.breakingVersion < StorageService.breakingVersion) {
+                    // Reset stored data when existing settings have been changed to avoid errors
+                    this.settings = defaultSettings;
+                    this.saveSettings(this.settings);
+                    return;
+                } else {
+                    // If new settings have been added, automatically set their values to default ones
+                    this.recursiveSettingsCheck(loadedSettings, defaultSettings);
+
+                    this.settings = loadedSettings;
+                    this.settings.version = StorageService.currentVersion;
+                    this.saveSettings(this.settings);
+                    return;
+                }
             }
+
+            this.settings = loadedSettings;
         } catch (e) {
             throw new Error("Could not parse settings!");
+        }
+    }
+
+    recursiveSettingsCheck(loadedObj: any, defaultObj: any) {
+        for (let key in defaultObj) {
+            if (loadedObj[key] === undefined) {
+                loadedObj[key] = defaultObj[key];
+                continue;
+            }
+
+            if (typeof defaultObj[key] === 'object') {
+                this.recursiveSettingsCheck(loadedObj[key], defaultObj[key]);
+            }
         }
     }
 
     loadDefaultSettings() {
         return {
             version: StorageService.currentVersion,
+            breakingVersion: StorageService.breakingVersion,
             visual: {
                 resources: 'numbers',
                 objectScaling: 'default',
@@ -148,6 +180,16 @@ class StorageService {
                 simplifyIds: 'disabled',
                 formatOutput: 'disabled',
                 formatOutputSpaces: 4
+            },
+            generation: {
+                defaultGeneratorId: 'irregular',
+                defaultPlayerCount: 10,
+                defaultStarsPerPlayer: 20,
+                defaultGeneratePlayers: 'disabled',
+                defaultPlayerDistribution: 'circular',
+                defaultStartingStars: 6,
+                defaultHyperspaceRange: 1,
+                minDistanceBetweenStars: 50
             },
             ruler: {
                 separateBaseCarrierSpeed: 'disabled',

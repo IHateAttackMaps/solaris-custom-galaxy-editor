@@ -1,6 +1,7 @@
 <script lang="ts">
 import GalaxyContainer from './components/GalaxyContainer.vue';
 import MainMenu from './components/menu/MainMenu.vue';
+import storage from './scripts/storage';
 
 export default {
     name: 'App',
@@ -10,7 +11,10 @@ export default {
     },
     methods: {
 
-    }
+    },
+    mounted() {
+        storage.loadSettings();
+    },
 }
 </script>
 

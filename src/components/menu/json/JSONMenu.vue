@@ -220,7 +220,6 @@ export default {
                             generatedPlayer.colour = combos[index].colour;
                             generatedPlayer.shape = combos[index].shape;
                             generatedPlayer.homeStarId = homeStar == null ? null : homeStar.id;
-                            generatedPlayer.alias = generatedPlayer.id;
 
                             index++;
                             players.push(generatedPlayer);
@@ -300,7 +299,6 @@ export default {
                             generatedPlayer.colour = combos[index].colour;
                             generatedPlayer.shape = combos[index].shape;
                             generatedPlayer.homeStarId = homeStar == null ? null : homeStar.id;
-                            generatedPlayer.alias = generatedPlayer.id;
 
                             index++;
                             players.push(generatedPlayer);
@@ -399,12 +397,6 @@ export default {
 
                     return true;
                 });
-
-                // This only prevents a non-empty JSON from being parsed as an empty galaxy.
-                if (stars.length + carriers.length + players.length + teams.length === 0) {
-                    this.errors.push(`The provided JSON does not match any known structure.`);
-                    return;
-                }
 
                 // Prevent duplicate IDs
                 const starIdSet = new Set<string>(stars.map(s => s.id));

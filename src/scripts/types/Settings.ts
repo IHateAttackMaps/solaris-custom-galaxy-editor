@@ -71,6 +71,7 @@ export interface Settings {
         newIndustryInfrastructure: number;
         newScienceInfrastructure: number;
         newSpecialist: number | null;
+        newSpecialistExpireTick: number | null;
         newIsNebula: boolean;
         newIsAsteroidField: boolean;
         newIsBinary: boolean;
@@ -111,7 +112,8 @@ export interface Settings {
         defaultAction: CarrierWaypointActionType;
         defaultActionShips: number;
         defaultCarrierShips: number;
-        defaultCarrierSpecialist: string | null;
+        defaultCarrierSpecialist: number | null;
+        defaultCarrierSpecialistExpireTick: number | null;
     },
     json: {
         simplifyIds: 'enabled' | 'disabled';

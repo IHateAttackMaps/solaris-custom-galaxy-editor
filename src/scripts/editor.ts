@@ -346,18 +346,7 @@ class GalaxyEditor {
     }
 
     createCarrierAtStar(star: Star, carrierData?: Carrier): Carrier {
-        const newCarrier = carrierData == null ? {
-            id: useGalaxyStore().getLowestValidCarrierId().toString(),
-            orbiting: star.id,
-            waypointsLooped: false,
-            ships: 1,
-            isGift: false,
-            playerId: star.playerId,
-            specialistId: null,
-            specialistExpireTick: null,
-            waypoints: [],
-            location: star.location
-        } as Carrier : carrierData;
+        const newCarrier = carrierData == null ? helper.generateNewCarrierAtStar(star) : carrierData;
 
         useGalaxyStore().addCarrier(newCarrier);
         this.reloadCarrier(newCarrier);

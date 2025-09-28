@@ -1,7 +1,7 @@
 import type { Settings } from "./types/Settings";
 
 class StorageService {
-    static currentVersion = 4; // Increment when adding new settings or changing existing ones
+    static currentVersion = 5; // Increment when adding new settings or changing existing ones
     static breakingVersion = 1; // Increment when changing existing settings in a way that forces them to be reset
 
     settings = {} as Settings;
@@ -133,6 +133,7 @@ class StorageService {
                 newIndustryInfrastructure: 0,
                 newScienceInfrastructure: 0,
                 newSpecialist: null,
+                newSpecialistExpireTick: null,
                 newIsNebula: false,
                 newIsAsteroidField: false,
                 newIsBinary: false,
@@ -173,7 +174,8 @@ class StorageService {
                 defaultAction: 'collectAll',
                 defaultActionShips: 0,
                 defaultCarrierShips: 1,
-                defaultCarrierSpecialist: null
+                defaultCarrierSpecialist: null,
+                defaultCarrierSpecialistExpireTick: null
             },
             json: {
                 ignoreCustomNames: 'disabled',

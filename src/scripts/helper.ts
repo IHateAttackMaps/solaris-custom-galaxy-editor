@@ -10,6 +10,7 @@ import { usePlayerColourStore } from '@/stores/colours';
 import storage from "./storage";
 import type { CarrierWaypoint } from "./types/CarrierWaypoint";
 import { GeneratorTypes, type GeneratorType } from "./types/Generator";
+import { useSpecialistsStore } from "@/stores/specialists";
 
 class HelperService {
     _getGalaxy() {
@@ -763,7 +764,8 @@ class HelperService {
             isPulsar: brushSettings.newIsPulsar,
             wormHoleToStarId: null,
             specialistId: brushSettings.newSpecialist,
-            specialistExpireTick: null,
+            specialist: brushSettings.newSpecialist ? useSpecialistsStore().getStarSpecialistById(brushSettings.newSpecialist) : undefined,
+            specialistExpireTick: brushSettings.newSpecialist ? brushSettings.newSpecialistExpireTick : null,
             location: {
                 x: 0,
                 y: 0
@@ -807,6 +809,26 @@ class HelperService {
             credits: playerSettings.newCredits,
             creditsSpecialists: playerSettings.newCreditsSpecialists
         };
+    }
+
+    generateNewCarrierAtStar(star: Star) {
+        const carrierSettings = storage.getSettings().carriers;
+
+        const newCarrier: Carrier = {
+            id: useGalaxyStore().getLowestValidCarrierId().toString(),
+            orbiting: star.id,
+            waypointsLooped: false,
+            ships: carrierSettings.defaultCarrierShips,
+            isGift: false,
+            playerId: star.playerId!,
+            specialistId: carrierSettings.defaultCarrierSpecialist,
+            specialistExpireTick: carrierSettings.defaultCarrierSpecialist ? carrierSettings.defaultCarrierSpecialistExpireTick : null,
+            specialist: carrierSettings.defaultCarrierSpecialist ? useSpecialistsStore().getCarrierSpecialistById(carrierSettings.defaultCarrierSpecialist) : undefined,
+            waypoints: [],
+            location: star.location
+        };
+
+        return newCarrier;
     }
 
     randomIntBetween(min: number, max: number) {

@@ -18,7 +18,7 @@
                     <label for="resourcesRingOpacity" class="col-12 col-sm-6 col-form-label sub-option-label">Resource
                         Ring Opacity</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="0.05" class="form-control" id="resourcesRingOpacity"
+                        <input type="number" min="0" max="1" step="0.05" required="true" class="form-control" id="resourcesRingOpacity"
                             v-model="settings.visual.resourcesRingOpacity" />
                     </div>
                 </div>
@@ -35,12 +35,12 @@
                     <label for="minimumScale" class="col-12 col-sm-6 col-form-label sub-option-label">Minimum
                         Scale</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="minimumScale"
+                        <input type="number" min="0" required="true" class="form-control" id="minimumScale"
                             v-model="settings.visual.objectMinimumScale" />
                     </div>
                 </div>
                 <div class="row pt-1 pb-1" v-if="settings.visual.objectScaling === 'clamped'">
-                    <label for="maximumScale" min="0" class="col-12 col-sm-6 col-form-label sub-option-label">Maximum
+                    <label for="maximumScale" min="0" required="true" class="col-12 col-sm-6 col-form-label sub-option-label">Maximum
                         Scale</label>
                     <div class="col-12 col-sm-6">
                         <input type="number" class="form-control" id="maximumScale"
@@ -64,14 +64,14 @@
                     <label for="starShipCountZoom" class="col-12 col-sm-6 col-form-label sub-option-label">Star
                         Ships</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="starShipCountZoom"
+                        <input type="number" min="0" required="true" class="form-control" id="starShipCountZoom"
                             v-model="settings.visual.zoomLevels.star.shipCount" />
                     </div>
                 </div>
                 <div class="row pt-1 pb-1">
                     <label for="starIdZoom" class="col-12 col-sm-6 col-form-label sub-option-label">Star ID</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="starIdZoom"
+                        <input type="number" min="0" required="true" class="form-control" id="starIdZoom"
                             v-model="settings.visual.zoomLevels.star.id" />
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                     <label for="starResourcesZoom"
                         class="col-12 col-sm-6 col-form-label sub-option-label">Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="starResourcesZoom"
+                        <input type="number" min="0" required="true" class="form-control" id="starResourcesZoom"
                             v-model="settings.visual.zoomLevels.star.resources" />
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                     <label for="starInfrastructureZoom"
                         class="col-12 col-sm-6 col-form-label sub-option-label">Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="starInfrastructureZoom"
+                        <input type="number" min="0" required="true" class="form-control" id="starInfrastructureZoom"
                             v-model="settings.visual.zoomLevels.star.infrastructure" />
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                     <label for="carrierShipCountZoom" class="col-12 col-sm-6 col-form-label sub-option-label">Carrier
                         Ships</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="carrierShipCountZoom"
+                        <input type="number" min="0" required="true" class="form-control" id="carrierShipCountZoom"
                             v-model="settings.visual.zoomLevels.carrier.carrierShips" />
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                 <div class="row pt-1 pb-1">
                     <label for="carrierPathWidth" class="col-12 col-sm-6 col-form-label">Carrier Path Width</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="carrierPathWidth"
+                        <input type="number" min="0" required="true" class="form-control" id="carrierPathWidth"
                             v-model="settings.visual.carrierPathWidth" />
                     </div>
                 </div>
@@ -163,7 +163,7 @@
                         Path
                         Dash Length</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" max="16" class="form-control" id="carrierPathDashLength"
+                        <input type="number" min="1" max="16" required="true" class="form-control" id="carrierPathDashLength"
                             v-model="settings.visual.carrierPathDashLength" />
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                     <label for="brushGraphicsWidth" class="col-12 col-sm-6 col-form-label">Brush Bounds
                         Width</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="brushGraphicsWidth"
+                        <input type="number" min="0" required="true" class="form-control" id="brushGraphicsWidth"
                             v-model="settings.visual.brushGraphicsWidth" />
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                     <label for="brushGraphicsOpacity" class="col-12 col-sm-6 col-form-label">Brush Bounds
                         Opacity</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="0.05" class="form-control" id="brushGraphicsOpacity"
+                        <input type="number" min="0" max="1" step="0.05" required="true" class="form-control" id="brushGraphicsOpacity"
                             v-model="settings.visual.brushGraphicsOpacity" />
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                     <label for="brushGraphicsOpacity" class="col-12 col-sm-6 col-form-label">Brush Point
                         Opacity</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="0.05" class="form-control" id="brushGraphicsOpacity"
+                        <input type="number" min="0" max="1" step="0.05" required="true" class="form-control" id="brushGraphicsOpacity"
                             v-model="settings.visual.brushPointOpacity" />
                     </div>
                 </div>
@@ -206,7 +206,7 @@
                     <label for="selectionBoundWidth" class="col-12 col-sm-6 col-form-label sub-option-label">Selection
                         Bounds Width</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="selectionBoundWidth"
+                        <input type="number" min="0" required="true" class="form-control" id="selectionBoundWidth"
                             v-model="settings.visual.selectionBoundWidth" />
                     </div>
                 </div>
@@ -214,7 +214,7 @@
                     <label for="selectionBoundOpacity" class="col-12 col-sm-6 col-form-label sub-option-label">Selection
                         Bounds Opacity</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="0.05" class="form-control" id="selectionBoundOpacity"
+                        <input type="number" min="0" max="1" step="0.05" required="true" class="form-control" id="selectionBoundOpacity"
                             v-model="settings.visual.selectionBoundOpacity" />
                     </div>
                 </div>
@@ -222,7 +222,7 @@
                     <label for="selectionMarkerBoundWidth" class="col-12 col-sm-6 col-form-label">Selection Marker
                         Bounds Width</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="selectionMarkerBoundWidth"
+                        <input type="number" min="0" required="true" class="form-control" id="selectionMarkerBoundWidth"
                             v-model="settings.visual.selectionMarkerBoundWidth" />
                     </div>
                 </div>
@@ -230,7 +230,7 @@
                     <label for="selectionMarkerBoundOpacity" class="col-12 col-sm-6 col-form-label">Selection Marker
                         Bounds Opacity</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="0.05" class="form-control"
+                        <input type="number" min="0" max="1" step="0.05" required="true" class="form-control"
                             id="selectionMarkerBoundOpacity" v-model="settings.visual.selectionMarkerBoundOpacity" />
                     </div>
                 </div>
@@ -238,7 +238,7 @@
                     <label for="selectionMoveBoundWidth" class="col-12 col-sm-6 col-form-label">Selection Move
                         Bounds Width</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" class="form-control" id="selectionMoveBoundWidth"
+                        <input type="number" min="0" required="true" class="form-control" id="selectionMoveBoundWidth"
                             v-model="settings.visual.selectionMoveBoundWidth" />
                     </div>
                 </div>
@@ -246,7 +246,7 @@
                     <label for="selectionMoveBoundOpacity" class="col-12 col-sm-6 col-form-label">Selection Move
                         Bounds Opacity</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="0.05" class="form-control"
+                        <input type="number" min="0" max="1" step="0.05" required="true" class="form-control"
                             id="selectionMoveBoundOpacity" v-model="settings.visual.selectionMoveBoundOpacity" />
                     </div>
                 </div>
@@ -254,7 +254,7 @@
                     <label for="selectionMovePointOpacity" class="col-12 col-sm-6 col-form-label">Selection Move
                         Point Opacity</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="0.05" class="form-control"
+                        <input type="number" min="0" max="1" step="0.05" required="true" class="form-control"
                             id="selectionMovePointOpacity" v-model="settings.visual.selectionMovePointOpacity" />
                     </div>
                 </div>
@@ -262,7 +262,7 @@
                     <label for="selectionMoveFillOpacity" class="col-12 col-sm-6 col-form-label">Selection Move
                         Fill Opacity</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="0.05" class="form-control"
+                        <input type="number" min="0" max="1" step="0.05" required="true" class="form-control"
                             id="selectionMoveFillOpacity" v-model="settings.visual.selectionMoveFillOpacity" />
                     </div>
                 </div>
@@ -276,7 +276,7 @@
                     <label for="newScanning" class="col-12 col-sm-6 col-form-label sub-option-label">Scanning Technology
                         Level</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" step="1" class="form-control" id="newScanning"
+                        <input type="number" min="1" step="1" required="true" class="form-control" id="newScanning"
                             v-model="settings.players.newTechnology.scanning" />
                     </div>
                 </div>
@@ -284,7 +284,7 @@
                     <label for="newHyperspace" class="col-12 col-sm-6 col-form-label sub-option-label">Hyperspace
                         Technology Level</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" step="1" class="form-control" id="newHyperspace"
+                        <input type="number" min="1" step="1" required="true" class="form-control" id="newHyperspace"
                             v-model="settings.players.newTechnology.hyperspace" />
                     </div>
                 </div>
@@ -292,7 +292,7 @@
                     <label for="newTerraforming" class="col-12 col-sm-6 col-form-label sub-option-label">Terraforming
                         Technology Level</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" step="1" class="form-control" id="newTerraforming"
+                        <input type="number" min="1" step="1" required="true" class="form-control" id="newTerraforming"
                             v-model="settings.players.newTechnology.terraforming" />
                     </div>
                 </div>
@@ -300,7 +300,7 @@
                     <label for="newExperimentation"
                         class="col-12 col-sm-6 col-form-label sub-option-label">Experimentation Technology Level</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newExperimentation"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newExperimentation"
                             v-model="settings.players.newTechnology.experimentation" />
                     </div>
                 </div>
@@ -308,7 +308,7 @@
                     <label for="newWeapons" class="col-12 col-sm-6 col-form-label sub-option-label">Weapons Technology
                         Level</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" step="1" class="form-control" id="newWeapons"
+                        <input type="number" min="1" step="1" required="true" class="form-control" id="newWeapons"
                             v-model="settings.players.newTechnology.weapons" />
                     </div>
                 </div>
@@ -316,7 +316,7 @@
                     <label for="newBanking" class="col-12 col-sm-6 col-form-label sub-option-label">Banking Technology
                         Level</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newBanking"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newBanking"
                             v-model="settings.players.newTechnology.banking" />
                     </div>
                 </div>
@@ -324,7 +324,7 @@
                     <label for="newManufacturing" class="col-12 col-sm-6 col-form-label sub-option-label">Manufacturing
                         Technology Level</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" step="1" class="form-control" id="newManufacturing"
+                        <input type="number" min="1" step="1" required="true" class="form-control" id="newManufacturing"
                             v-model="settings.players.newTechnology.manufacturing" />
                     </div>
                 </div>
@@ -332,14 +332,14 @@
                     <label for="newSpecialists" class="col-12 col-sm-6 col-form-label sub-option-label">Specialists
                         Technology Level</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newSpecialists"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newSpecialists"
                             v-model="settings.players.newTechnology.specialists" />
                     </div>
                 </div>
                 <div class="row pt-1 pb-1">
                     <label for="newCredits" class="col-12 col-sm-6 col-form-label sub-option-label">Credits</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newCredits"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newCredits"
                             v-model="settings.players.newCredits" />
                     </div>
                 </div>
@@ -347,7 +347,7 @@
                     <label for="newCreditsSpecialists"
                         class="col-12 col-sm-6 col-form-label sub-option-label">Specialist Tokens</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" step="1" class="form-control" id="newCreditsSpecialists"
+                        <input type="number" min="1" step="1" required="true" class="form-control" id="newCreditsSpecialists"
                             v-model="settings.players.newCreditsSpecialists" />
                     </div>
                 </div>
@@ -367,14 +367,14 @@
                 <div class="row pt-1 pb-1">
                     <label for="defaultBrushRadius" class="col-12 col-sm-6 col-form-label">Default Brush Radius</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" class="form-control" id="defaultBrushRadius"
+                        <input type="number" min="0" step="any" required="true" class="form-control" id="defaultBrushRadius"
                             v-model="settings.brush.defaultBrushRadius" />
                     </div>
                 </div>
                 <div class="row pt-1 pb-1">
                     <label for="defaultStarAmount" class="col-12 col-sm-6 col-form-label">Default Star Amount</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" class="form-control" id="defaultStarAmount"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="defaultStarAmount"
                             v-model="settings.brush.defaultStarAmount" />
                     </div>
                 </div>
@@ -392,21 +392,21 @@
                 <div class="row pt-1 pb-1">
                     <label for="defaultSnapRadius" class="col-12 col-sm-6 col-form-label">Default Snap Radius</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" class="form-control" id="defaultSnapRadius"
+                        <input type="number" min="0" step="any" required="true" class="form-control" id="defaultSnapRadius"
                             v-model="settings.brush.defaultSnapRadius" />
                     </div>
                 </div>
                 <div class="row pt-1 pb-1">
                     <label for="defaultSnapSteps" class="col-12 col-sm-6 col-form-label">Default Snap Steps</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" class="form-control" id="defaultSnapSteps"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="defaultSnapSteps"
                             v-model="settings.brush.defaultSnapSteps" />
                     </div>
                 </div>
                 <div class="row pt-1 pb-1">
                     <label for="defaultStepOffset" class="col-12 col-sm-6 col-form-label">Default Step Offset</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" class="form-control" id="defaultStepOffset"
+                        <input type="number" min="0" step="any" required="true" class="form-control" id="defaultStepOffset"
                             v-model="settings.brush.defaultStepOffset" />
                     </div>
                 </div>
@@ -417,7 +417,7 @@
                     <label for="newEconomyResources" class="col-12 col-sm-6 col-form-label sub-option-label">Natural
                         Economic Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newEconomyResources"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newEconomyResources"
                             v-model="settings.brush.newEconomyResources" />
                     </div>
                 </div>
@@ -425,7 +425,7 @@
                     <label for="newIndustryResources" class="col-12 col-sm-6 col-form-label sub-option-label">Natural
                         Industrial Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newIndustryResources"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newIndustryResources"
                             v-model="settings.brush.newIndustryResources" />
                     </div>
                 </div>
@@ -433,7 +433,7 @@
                     <label for="newScienceResources" class="col-12 col-sm-6 col-form-label sub-option-label">Natural
                         Scientific Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newScienceResources"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newScienceResources"
                             v-model="settings.brush.newScienceResources" />
                     </div>
                 </div>
@@ -441,7 +441,7 @@
                     <label for="newEconomyInfrastructure" class="col-12 col-sm-6 col-form-label sub-option-label">
                         Economic Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newEconomyInfrastructure"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newEconomyInfrastructure"
                             v-model="settings.brush.newEconomyInfrastructure" />
                     </div>
                 </div>
@@ -449,7 +449,7 @@
                     <label for="newIndustryInfrastructure" class="col-12 col-sm-6 col-form-label sub-option-label">
                         Industrial Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newIndustryInfrastructure"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newIndustryInfrastructure"
                             v-model="settings.brush.newIndustryInfrastructure" />
                     </div>
                 </div>
@@ -457,7 +457,7 @@
                     <label for="newScienceInfrastructure" class="col-12 col-sm-6 col-form-label sub-option-label">
                         Scientific Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="newScienceInfrastructure"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="newScienceInfrastructure"
                             v-model="settings.brush.newScienceInfrastructure" />
                     </div>
                 </div>
@@ -473,11 +473,19 @@
                     </div>
                 </div>
                 <div class="row pt-1 pb-1">
+                    <label for="newSpecialistExpireTick"
+                        class="col-12 col-sm-6 col-form-label sub-option-label">Specialist Expire Tick</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="0" step="1" :placeholder="'(none)'" class="form-control" id="newSpecialistExpireTick"
+                            v-model="settings.brush.newSpecialistExpireTick" />
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
                     <label for="newIsNebula" class="col-12 col-sm-6 col-form-label sub-option-label">Is Nebula</label>
                     <div class="col-12 col-sm-6">
                         <select class="form-control" id="newIsNebula" v-model="settings.brush.newIsNebula">
-                            <option value="false">False</option>
-                            <option value="true">True</option>
+                            <option :value="false">False</option>
+                            <option :value="true">True</option>
                         </select>
                     </div>
                 </div>
@@ -487,8 +495,8 @@
                     <div class="col-12 col-sm-6">
                         <select class="form-control" id="newIsAsteroidField"
                             v-model="settings.brush.newIsAsteroidField">
-                            <option value="false">False</option>
-                            <option value="true">True</option>
+                            <option :value="false">False</option>
+                            <option :value="true">True</option>
                         </select>
                     </div>
                 </div>
@@ -496,8 +504,8 @@
                     <label for="newIsBinary" class="col-12 col-sm-6 col-form-label sub-option-label">Is Binary</label>
                     <div class="col-12 col-sm-6">
                         <select class="form-control" id="newIsBinary" v-model="settings.brush.newIsBinary">
-                            <option value="false">False</option>
-                            <option value="true">True</option>
+                            <option :value="false">False</option>
+                            <option :value="true">True</option>
                         </select>
                     </div>
                 </div>
@@ -506,8 +514,8 @@
                         Hole</label>
                     <div class="col-12 col-sm-6">
                         <select class="form-control" id="newIsBlackHole" v-model="settings.brush.newIsBlackHole">
-                            <option value="false">False</option>
-                            <option value="true">True</option>
+                            <option :value="false">False</option>
+                            <option :value="true">True</option>
                         </select>
                     </div>
                 </div>
@@ -515,8 +523,8 @@
                     <label for="newIsPulsar" class="col-12 col-sm-6 col-form-label sub-option-label">Is Pulsar</label>
                     <div class="col-12 col-sm-6">
                         <select class="form-control" id="newIsPulsar" v-model="settings.brush.newIsPulsar">
-                            <option value="false">False</option>
-                            <option value="true">True</option>
+                            <option :value="false">False</option>
+                            <option :value="true">True</option>
                         </select>
                     </div>
                 </div>
@@ -525,8 +533,8 @@
                         Gate</label>
                     <div class="col-12 col-sm-6">
                         <select class="form-control" id="newHasWarpGate" v-model="settings.brush.newHasWarpGate">
-                            <option value="false">False</option>
-                            <option value="true">True</option>
+                            <option :value="false">False</option>
+                            <option :value="true">True</option>
                         </select>
                     </div>
                 </div>
@@ -537,8 +545,8 @@
                     <label for="copyCarriers" class="col-12 col-sm-6 col-form-label">Copy Carriers By Default</label>
                     <div class="col-12 col-sm-6">
                         <select class="form-control" id="copyCarriers" v-model="settings.transform.copyCarriers">
-                            <option value="false">False</option>
-                            <option value="true">True</option>
+                            <option :value="false">False</option>
+                            <option :value="true">True</option>
                         </select>
                     </div>
                 </div>
@@ -549,7 +557,7 @@
                     <label for="minEconomyResources" class="col-12 col-sm-6 col-form-label">Default Minimum Natural
                         Economic Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="minEconomyResources"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="minEconomyResources"
                             v-model="settings.random.minEconomyResources" />
                     </div>
                 </div>
@@ -557,7 +565,7 @@
                     <label for="maxEconomyResources" class="col-12 col-sm-6 col-form-label">Default Maximum Natural
                         Economic Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="maxEconomyResources"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="maxEconomyResources"
                             v-model="settings.random.maxEconomyResources" />
                     </div>
                 </div>
@@ -565,7 +573,7 @@
                     <label for="minIndustryResources" class="col-12 col-sm-6 col-form-label">Default Minimum Natural
                         Industrial Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="minIndustryResources"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="minIndustryResources"
                             v-model="settings.random.minIndustryResources" />
                     </div>
                 </div>
@@ -573,7 +581,7 @@
                     <label for="maxIndustryResources" class="col-12 col-sm-6 col-form-label">Default Maximum Natural
                         Industrial Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="maxIndustryResources"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="maxIndustryResources"
                             v-model="settings.random.maxIndustryResources" />
                     </div>
                 </div>
@@ -581,7 +589,7 @@
                     <label for="minScienceResources" class="col-12 col-sm-6 col-form-label">Default Minimum Natural
                         Scientific Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="minScienceResources"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="minScienceResources"
                             v-model="settings.random.minScienceResources" />
                     </div>
                 </div>
@@ -589,7 +597,7 @@
                     <label for="maxScienceResources" class="col-12 col-sm-6 col-form-label">Default Maximum Natural
                         Scientific Resources</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="maxScienceResources"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="maxScienceResources"
                             v-model="settings.random.maxScienceResources" />
                     </div>
                 </div>
@@ -597,7 +605,7 @@
                     <label for="minEconomyInfrastructure" class="col-12 col-sm-6 col-form-label">Default Minimum
                         Economic Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="minEconomyInfrastructure"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="minEconomyInfrastructure"
                             v-model="settings.random.minEconomyInfrastructure" />
                     </div>
                 </div>
@@ -605,7 +613,7 @@
                     <label for="maxEconomyInfrastructure" class="col-12 col-sm-6 col-form-label">Default Maximum
                         Economic Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="maxEconomyInfrastructure"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="maxEconomyInfrastructure"
                             v-model="settings.random.maxEconomyInfrastructure" />
                     </div>
                 </div>
@@ -613,7 +621,7 @@
                     <label for="minIndustryInfrastructure" class="col-12 col-sm-6 col-form-label">Default Minimum
                         Industrial Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="minIndustryInfrastructure"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="minIndustryInfrastructure"
                             v-model="settings.random.minIndustryInfrastructure" />
                     </div>
                 </div>
@@ -621,7 +629,7 @@
                     <label for="maxIndustryInfrastructure" class="col-12 col-sm-6 col-form-label">Default Maximum
                         Industrial Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="maxIndustryInfrastructure"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="maxIndustryInfrastructure"
                             v-model="settings.random.maxIndustryInfrastructure" />
                     </div>
                 </div>
@@ -629,7 +637,7 @@
                     <label for="minScienceInfrastructure" class="col-12 col-sm-6 col-form-label">Default Minimum
                         Scientific Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="minScienceInfrastructure"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="minScienceInfrastructure"
                             v-model="settings.random.minScienceInfrastructure" />
                     </div>
                 </div>
@@ -637,7 +645,7 @@
                     <label for="maxScienceInfrastructure" class="col-12 col-sm-6 col-form-label">Default Maximum
                         Scientific Infrastructure</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="maxScienceInfrastructure"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="maxScienceInfrastructure"
                             v-model="settings.random.maxScienceInfrastructure" />
                     </div>
                 </div>
@@ -648,7 +656,7 @@
                     <label for="lowValueBiasNR" class="col-12 col-sm-6 col-form-label sub-option-label">Natural Resource
                         Low Value Bias</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="any" class="form-control" id="lowValueBiasNR"
+                        <input type="number" min="0" max="1" step="any" required="true" class="form-control" id="lowValueBiasNR"
                             v-model="settings.random.lowValueBiasNR" />
                     </div>
                 </div>
@@ -656,7 +664,7 @@
                     <label for="radiusWeightNR" class="col-12 col-sm-6 col-form-label sub-option-label">Natural Resource
                         Radius Weight</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="any" class="form-control" id="radiusWeightNR"
+                        <input type="number" min="0" max="1" step="any" required="true" class="form-control" id="radiusWeightNR"
                             v-model="settings.random.radiusWeightNR" />
                     </div>
                 </div>
@@ -665,7 +673,7 @@
                         class="col-12 col-sm-6 col-form-label sub-option-label">Infrastructure
                         Low Value Bias</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="any" class="form-control" id="lowValueBiasInfra"
+                        <input type="number" min="0" max="1" step="any" required="true" class="form-control" id="lowValueBiasInfra"
                             v-model="settings.random.lowValueBiasInfra" />
                     </div>
                 </div>
@@ -674,7 +682,7 @@
                         class="col-12 col-sm-6 col-form-label sub-option-label">Infrastructure
                         Radius Weight</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="1" step="any" class="form-control" id="radiusWeightInfra"
+                        <input type="number" min="0" max="1" step="any" required="true" class="form-control" id="radiusWeightInfra"
                             v-model="settings.random.radiusWeightInfra" />
                     </div>
                 </div>
@@ -682,7 +690,7 @@
                     <label for="asteroidFieldPercentage" class="col-12 col-sm-6 col-form-label">Default Asteroid Field
                         Percentage</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="100" step="any" class="form-control"
+                        <input type="number" min="0" max="100" step="any" required="true" class="form-control"
                             id="asteroidFieldPercentage" v-model="settings.random.asteroidFieldPercentage" />
                     </div>
                 </div>
@@ -690,7 +698,7 @@
                     <label for="binaryPercentage" class="col-12 col-sm-6 col-form-label">Default Binary Star
                         Percentage</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="100" step="any" class="form-control" id="binaryPercentage"
+                        <input type="number" min="0" max="100" step="any" required="true" class="form-control" id="binaryPercentage"
                             v-model="settings.random.binaryPercentage" />
                     </div>
                 </div>
@@ -698,7 +706,7 @@
                     <label for="blackHolePercentage" class="col-12 col-sm-6 col-form-label">Default Black Hole
                         Percentage</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="100" step="any" class="form-control" id="blackHolePercentage"
+                        <input type="number" min="0" max="100" step="any" required="true" class="form-control" id="blackHolePercentage"
                             v-model="settings.random.blackHolePercentage" />
                     </div>
                 </div>
@@ -706,7 +714,7 @@
                     <label for="nebulaPercentage" class="col-12 col-sm-6 col-form-label">Default Nebula
                         Percentage</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="100" step="any" class="form-control" id="nebulaPercentage"
+                        <input type="number" min="0" max="100" step="any" required="true" class="form-control" id="nebulaPercentage"
                             v-model="settings.random.nebulaPercentage" />
                     </div>
                 </div>
@@ -714,7 +722,7 @@
                     <label for="pulsarPercentage" class="col-12 col-sm-6 col-form-label">Default Pulsar
                         Percentage</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="100" step="any" class="form-control" id="pulsarPercentage"
+                        <input type="number" min="0" max="100" step="any" required="true" class="form-control" id="pulsarPercentage"
                             v-model="settings.random.pulsarPercentage" />
                     </div>
                 </div>
@@ -722,7 +730,7 @@
                     <label for="warpGatePercentage" class="col-12 col-sm-6 col-form-label">Default Warp Gate
                         Percentage</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="100" step="any" class="form-control" id="warpGatePercentage"
+                        <input type="number" min="0" max="100" step="any" required="true" class="form-control" id="warpGatePercentage"
                             v-model="settings.random.warpGatePercentage" />
                     </div>
                 </div>
@@ -730,7 +738,7 @@
                     <label for="wormHolePercentage" class="col-12 col-sm-6 col-form-label">Default Wormhole
                         Percentage</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" max="100" step="any" class="form-control" id="wormHolePercentage"
+                        <input type="number" min="0" max="100" step="any" required="true" class="form-control" id="wormHolePercentage"
                             v-model="settings.random.wormHolePercentage" />
                     </div>
                 </div>
@@ -760,7 +768,7 @@
                     <label for="defaultCarrierShips"
                         class="col-12 col-sm-6 col-form-label sub-option-label">Ships</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="defaultCarrierShips"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="defaultCarrierShips"
                             v-model="settings.carriers.defaultCarrierShips" />
                     </div>
                 </div>
@@ -774,6 +782,15 @@
                                 {{ specialist.name }}
                             </option>
                         </select>
+                    </div>
+                </div>
+                <div class="row pt-1 pb-1">
+                    <label for="defaultCarrierSpecialistExpireTick"
+                        class="col-12 col-sm-6 col-form-label sub-option-label">Specialist Expire Tick</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="number" min="0" step="1" class="form-control"
+                            id="defaultCarrierSpecialistExpireTick" :placeholder="'(none)'"
+                            v-model="settings.carriers.defaultCarrierSpecialistExpireTick" />
                     </div>
                 </div>
                 <div class="row pt-1 pb-1">
@@ -800,7 +817,7 @@
                     <label for="defaultActionShips" class="col-12 col-sm-6 col-form-label sub-option-label">Action
                         Value</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="defaultActionShips"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="defaultActionShips"
                             v-model="settings.carriers.defaultActionShips" />
                     </div>
                 </div>
@@ -840,7 +857,7 @@
                     <label for="formatOutputSpaces" class="col-12 col-sm-6 col-form-label sub-option-label">Spaces Per
                         Indent</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="formatOutputSpaces"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="formatOutputSpaces"
                             v-model="settings.json.formatOutputSpaces" />
                     </div>
                 </div>
@@ -863,7 +880,7 @@
                 <div class="row pt-1 pb-1">
                     <label for="defaultPlayerCount" class="col-12 col-sm-6 col-form-label">Default Player Count</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="2" step="1" class="form-control" id="defaultPlayerCount"
+                        <input type="number" min="2" step="1" required="true" class="form-control" id="defaultPlayerCount"
                             v-model="settings.generation.defaultPlayerCount" />
                     </div>
                 </div>
@@ -871,7 +888,7 @@
                     <label for="defaultStarsPerPlayer" class="col-12 col-sm-6 col-form-label">Default Stars Per
                         Player</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" step="1" class="form-control" id="defaultStarsPerPlayer"
+                        <input type="number" min="1" step="1" required="true" class="form-control" id="defaultStarsPerPlayer"
                             v-model="settings.generation.defaultStarsPerPlayer" />
                     </div>
                 </div>
@@ -902,7 +919,7 @@
                     <label for="defaultStartingStars" class="col-12 col-sm-6 col-form-label">Default Starting
                         Stars</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" step="1" class="form-control" id="defaultStartingStars"
+                        <input type="number" min="1" step="1" required="true" class="form-control" id="defaultStartingStars"
                             v-model="settings.generation.defaultStartingStars" />
                     </div>
                 </div>
@@ -910,7 +927,7 @@
                     <label for="defaultHyperspaceRange" class="col-12 col-sm-6 col-form-label">Default Initial
                         Hyperspace Range</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="1" step="1" class="form-control" id="defaultHyperspaceRange"
+                        <input type="number" min="1" step="1" required="true" class="form-control" id="defaultHyperspaceRange"
                             v-model="settings.generation.defaultHyperspaceRange" />
                     </div>
                 </div>
@@ -918,7 +935,7 @@
                     <label for="minDistanceBetweenStars" class="col-12 col-sm-6 col-form-label">Minimum Distance
                         Between Stars</label>
                     <div class="col-12 col-sm-6">
-                        <input type="number" min="0" step="1" class="form-control" id="minDistanceBetweenStars"
+                        <input type="number" min="0" step="1" required="true" class="form-control" id="minDistanceBetweenStars"
                             v-model="settings.generation.minDistanceBetweenStars" />
                     </div>
                 </div>
@@ -1073,6 +1090,7 @@ import { useGalaxyStore } from '@/stores/galaxy';
 import helper from '@/scripts/helper';
 import { useSpecialistsStore } from '@/stores/specialists';
 import CollapsePanel from './CollapsePanel.vue';
+import { log2 } from 'pixi.js';
 
 export default {
     components: {
@@ -1111,7 +1129,14 @@ export default {
         validate(e: Event) {
             this.errors = [];
 
-            // If any complex validation needs to be done
+            // If specialistExpireTick is empty, save it as null
+            if (!this.settings.brush.newSpecialistExpireTick) {
+                this.settings.brush.newSpecialistExpireTick = null;
+            }
+
+            if (!this.settings.carriers.defaultCarrierSpecialistExpireTick) {
+                this.settings.carriers.defaultCarrierSpecialistExpireTick = null;
+            }
 
             return true;
         }
@@ -1170,5 +1195,9 @@ h5 {
 
 p {
     margin-bottom: 0;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 </style>

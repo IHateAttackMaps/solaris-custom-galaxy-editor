@@ -21,23 +21,12 @@ class CircularBalancedMapGenerator implements MapGenerator {
 
     _getRotatedLocation(location: Location, angle: number) {
         return {
-            x: Math.cos(angle) * location.x + Math.sin(angle) * location.y,
-            y: Math.sin(angle) * -location.x + Math.cos(angle) * location.y,
+            ...helper.getRotatedLocation(location, -angle),
             homeStar: null,
             distanceToClosestReachable: null,
             closestReachable: null,
             linkedLocations: []
         };
-    }
-
-    _moveLocationTowards(location: Location, towards: Location, minDistance: number) {
-        let dx = towards.x - location.x;
-        let dy = towards.y - location.y;
-        let dist = helper.getDistanceBetweenLocations(location, towards);
-        if (dist < minDistance) { return; }
-        let amount = 1.0 - (minDistance / dist);
-        location.x += dx * amount;
-        location.y += dy * amount;
     }
 
     generateLocations(playerCount: number, starsPerPlayer: number, seed?: string | null, startingStars?: number, initialHyperspaceRange?: number) {
@@ -168,7 +157,7 @@ class CircularBalancedMapGenerator implements MapGenerator {
                     }
                 }
 
-                this._moveLocationTowards(closestUnreachable, closestUnreachable.closestReachable!, minimumClaimDistance);
+                helper.moveLocationTowards(closestUnreachable, closestUnreachable.closestReachable!, minimumClaimDistance);
 
                 // after moving closer we can change the location from the unreachable to the reachable array
                 unreachebleLocations.splice(unreachebleLocations.indexOf(closestUnreachable), 1);

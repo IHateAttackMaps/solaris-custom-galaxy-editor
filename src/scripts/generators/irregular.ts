@@ -7,31 +7,14 @@ import storage from '../storage';
 
 class IrregularMapGenerator implements MapGenerator {
     //TODO this is generator agnostic and could be on a base class or service
-    _moveLocationTowards(location: Location, towards: Location, minDistance: number) {
-        let dx = towards.x - location.x;
-        let dy = towards.y - location.y;
-        let dist = helper.getDistanceBetweenLocations(location, towards);
-        if (dist < minDistance) { return; }
-        let amount = 1.0 - (minDistance / dist);
-        location.x += dx * amount;
-        location.y += dy * amount;
-    }
-
-    //TODO this is generator agnostic and could be on a base class or service
     _removeLocationFromArray(array: Location[], location: Location) {
         let index = array.indexOf(location);
         array.splice(index, 1);
     }
 
-
-    //TODO this is generator agnostic and could be on a base class or service
     _rotatedLocation(location: Location, angle: number) {
-        return {
-            x: Math.cos(angle) * location.x + Math.sin(angle) * location.y,
-            y: Math.sin(angle) * -location.x + Math.cos(angle) * location.y
-        };
+        return helper.getRotatedLocation(location, -angle);
     }
-
 
     //TODO this is generator agnostic and could be on a base class or service
     _displacedLocation(location1: Location, location2: Location) {
@@ -368,7 +351,7 @@ class IrregularMapGenerator implements MapGenerator {
                     }
                 }
 
-                this._moveLocationTowards(closestUnreachable, (closestUnreachable as any).closestReachable, minimumClaimDistance);
+                helper.moveLocationTowards(closestUnreachable, (closestUnreachable as any).closestReachable, minimumClaimDistance);
 
                 // after moving closer we can change the location from the unreachable to the reachable array
                 unreachebleLocations.splice(unreachebleLocations.indexOf(closestUnreachable), 1);

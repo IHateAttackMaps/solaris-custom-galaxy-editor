@@ -958,6 +958,16 @@ class HelperService {
 
         return sorted.slice(0, amount);
     }
+
+    moveLocationTowards(location: Location, towards: Location, minDistance: number) {
+        let dx = towards.x - location.x;
+        let dy = towards.y - location.y;
+        let dist = this.getDistanceBetweenLocations(location, towards);
+        if (dist < minDistance) { return; }
+        let amount = 1.0 - (minDistance / dist);
+        location.x += dx * amount;
+        location.y += dy * amount;
+    }
 }
 
 export default new HelperService();

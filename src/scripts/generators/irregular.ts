@@ -1,9 +1,9 @@
-import RNG, { type RandomSeed } from 'random-seed';
 import helper from "../helper";
 import type { MapGenerator } from "../types/Generator";
 import type { Location } from "../types/Location";
 import { createNoise2D, type NoiseFunction2D } from 'simplex-noise';
 import storage from '../storage';
+import SeededRandomGen from '../util/seededRandomGen';
 
 class IrregularMapGenerator implements MapGenerator {
     //TODO this is generator agnostic and could be on a base class or service
@@ -368,24 +368,3 @@ class IrregularMapGenerator implements MapGenerator {
 }
 
 export default new IrregularMapGenerator();
-
-class SeededRandomGen {
-    private rg: RandomSeed;
-
-    constructor(seed: string) {
-        this.rg = RNG.create(seed);
-        this.random = this.random.bind(this);
-    }
-
-    getRandomNumber(max: number): number {
-        return Math.floor(this.random() * (max + 1))
-    }
-
-    getRandomNumberBetween(min: number, max: number): number {
-        return Math.floor(this.random() * (max - min + 1) + min);
-    }
-
-    random(): number {
-        return this.rg.random();
-    }
-}

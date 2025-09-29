@@ -239,7 +239,7 @@ class IrregularMapGenerator implements MapGenerator {
     generateLocations(playerCount: number, starsPerPlayer: number, seed: string | null | undefined, startingStars?: number, initialHyperspaceRange?: number): Location[] {
         if (!startingStars) throw new Error(`Starting star count must be provided for the Irregular generator!`);
         if (!initialHyperspaceRange) throw new Error(`Minimum hyperspace range must be provided for the Irregular generator!`);
-        if (!seed) seed = (Math.random() * (10 ** 8)).toFixed(0);
+        if (!seed) seed = (Math.random() * Number.MAX_SAFE_INTEGER).toFixed(0);
 
         const rand = new SeededRandomGen(seed);
 

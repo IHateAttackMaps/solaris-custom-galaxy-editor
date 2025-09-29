@@ -32,7 +32,7 @@ class CircularBalancedMapGenerator implements MapGenerator {
     generateLocations(playerCount: number, starsPerPlayer: number, seed?: string | null, startingStars?: number, initialHyperspaceRange?: number) {
         if (!startingStars) throw new Error(`Starting star count must be provided for the Circular Balanced generator!`);
         if (!initialHyperspaceRange) throw new Error(`Minimum hyperspace range must be provided for the Circular Balanced generator!`);
-        if (!seed) seed = (Math.random() * (10 ** 8)).toFixed(0);
+        if (!seed) seed = (Math.random() * Number.MAX_SAFE_INTEGER).toFixed(0);
 
         const locations: any[] = [];
         const rng = RNG.create(seed);

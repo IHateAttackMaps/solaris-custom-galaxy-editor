@@ -7,7 +7,7 @@ import helper from '../helper';
 
 class SpiralMapGenerator implements MapGenerator {
     generateLocations(playerCount: number, starsPerPlayer: number, seed?: string | null) {
-        if (!seed) seed = (Math.random() * (10 ** 8)).toFixed(0);
+        if (!seed) seed = (Math.random() * Number.MAX_SAFE_INTEGER).toFixed(0);
 
         const count = playerCount * starsPerPlayer;
         let branchCount = 4;

@@ -1,4 +1,4 @@
-import { Container, Graphics, Rectangle, Sprite } from "pixi.js";
+import { Container, Graphics, Rectangle, Sprite, type ContainerChild } from "pixi.js";
 import type { Settings } from "./types/Settings";
 import type { Star } from "./types/Star";
 import { useMenuStateStore } from "@/stores/menuState";
@@ -25,6 +25,8 @@ class StarSelection extends EventEmitter {
 
     userSettings: Settings | null;
     selection: Star[];
+
+    selectedStarsMap: Map<string, Graphics>;
 
     selectionBoxOrigin: { x: number, y: number } | null;
     selectionBoxIsRemoving: boolean;
@@ -54,6 +56,8 @@ class StarSelection extends EventEmitter {
         this.userSettings = null;
         this.selection = [];
 
+        this.selectedStarsMap = new Map();
+
         this.selectionBoxOrigin = null;
         this.selectionBoxIsRemoving = false;
 
@@ -70,6 +74,8 @@ class StarSelection extends EventEmitter {
 
     clear() {
         this.container.removeChildren();
+        this.container_selected_stars = null;
+        this.selectedStarsMap.clear();
     }
 
     clearForModeChange() {
@@ -81,7 +87,42 @@ class StarSelection extends EventEmitter {
         this.clear();
 
         this._drawSelectionBounds();
-        this._drawSelectedStarMarkers();
+        this._drawSelectedStarMarkers(this.selection);
+    }
+
+    drawSelectedStarDelta(stars: Star[], removing: boolean) {
+        this._drawSelectionBounds();
+
+        if (removing) {
+            this._undrawSelectedStarMarkers(stars);
+        } else {
+            this._drawSelectedStarMarkers(stars);
+        }
+    }
+
+    updateSelectedStarId(oldId: string, newId: string) {
+        const graphics = this.selectedStarsMap.get(oldId);
+
+        if (graphics) {
+            this.selectedStarsMap.set(newId, graphics);
+            this.selectedStarsMap.delete(oldId);
+        }
+    }
+
+    _undrawSelectedStarMarkers(stars: Star[]) {
+        if (this.container_selected_stars == null) return;
+
+        const removeArray: ContainerChild[] = [];
+
+        for (const star of stars) {
+            const graphics = this.selectedStarsMap.get(star.id);
+            if (!graphics) continue;
+
+            removeArray.push(graphics);
+            this.selectedStarsMap.delete(star.id);
+        }
+
+        this.container_selected_stars.removeChild(...removeArray);
     }
 
     _drawSelectionBounds() {
@@ -103,25 +144,34 @@ class StarSelection extends EventEmitter {
         this.container.addChild(this.graphics_selection_bounds);
     }
 
-    _drawSelectedStarMarkers() {
-        if (this.container_selected_stars != null) {
-            this.container.removeChild(this.container_selected_stars);
-            this.container_selected_stars = null;
+    _drawSelectedStarMarkers(stars: Star[]) {
+        if (this.container_selected_stars == null) {
+            this.container_selected_stars = new Container({ isRenderGroup: true });
         }
 
-        if (!this.selection.length) return;
+        if (!stars.length) return;
 
-        this.container_selected_stars = new Container({ isRenderGroup: true });
-
-        for (const star of this.selection) {
-            const graphics = new Graphics();
-            graphics.circle(star.location.x, star.location.y, 25);
-            graphics.stroke({ width: this.userSettings!.visual.selectionMarkerBoundWidth, color: 0x8088FF, alpha: this.userSettings!.visual.selectionMarkerBoundOpacity });
-
-            this.container_selected_stars.addChild(graphics);
+        for (const star of stars) {
+            this._drawSelectedStarMarker(star);
         }
 
         this.container.addChild(this.container_selected_stars);
+    }
+
+    _drawSelectedStarMarker(star: Star) {
+        if (this.container_selected_stars == null) return;
+
+        const oldGraphics = this.selectedStarsMap.get(star.id);
+        if (oldGraphics) {
+            this.container_selected_stars.removeChild(oldGraphics);
+        }
+
+        const graphics = new Graphics();
+        graphics.circle(star.location.x, star.location.y, 25);
+        graphics.stroke({ width: this.userSettings!.visual.selectionMarkerBoundWidth, color: 0x8088FF, alpha: this.userSettings!.visual.selectionMarkerBoundOpacity });
+        this.selectedStarsMap.set(star.id, graphics);
+
+        this.container_selected_stars.addChild(graphics);
     }
 
     _beginSelectionBox(pos: { x: number, y: number }, isRemoving: boolean) {
@@ -190,7 +240,7 @@ class StarSelection extends EventEmitter {
             y2 = this.selectionBoxOrigin.y;
         }
 
-        const selectedStars = useGalaxyStore().$state.galaxy.stars.filter(s =>
+        let selectedStars = useGalaxyStore().$state.galaxy.stars.filter(s =>
             s.location.x >= x1 && s.location.x <= x2 &&
             s.location.y >= y1 && s.location.y <= y2
         );
@@ -198,12 +248,14 @@ class StarSelection extends EventEmitter {
         if (this.selectionBoxIsRemoving) {
             useMenuStateStore().removeStarsFromSelection(selectedStars.map(s => s.id));
         } else {
+            // Ignore stars already in selection
+            selectedStars = selectedStars.filter(s => !this.selection.includes(s));
             useMenuStateStore().addStarsToSelection(selectedStars);
         }
 
         this.selectionBoxOrigin = null;
 
-        this.draw();
+        this.drawSelectedStarDelta(selectedStars, this.selectionBoxIsRemoving);
     }
 
     _clearSelectionBox() {
@@ -487,12 +539,12 @@ class StarSelection extends EventEmitter {
 
     onStarClicked(e: any) {
         useMenuStateStore().addStarToSelection(e);
-        this.draw();
+        this.drawSelectedStarDelta([e], false);
     }
 
     onStarRightClicked(e: any) {
         useMenuStateStore().removeStarFromSelection(e.id);
-        this.draw();
+        this.drawSelectedStarDelta([e], true);
     }
 
     onViewportPointerDown(pos: { x: number, y: number }, mode: string, isRemoving: boolean = false) {

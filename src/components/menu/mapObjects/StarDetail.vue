@@ -445,6 +445,9 @@ export default {
                 this.changeIdErrors.push(`A star cannot have an empty ID.`);
                 return;
             }
+
+            editor.map!.updateSelectedStarId(this.starData.id, value);
+
             useGalaxyStore().changeId('star', this.starData.id, value);
             this.starData.id = value;
             editor.updateStarId(this.starData);
@@ -540,7 +543,7 @@ export default {
             useGalaxyStore().removeStar(this.starData.id);
             editor.deleteStar(this.starData);
             useMenuStateStore().removeStarFromSelection(this.starData.id);
-            editor.map!.drawStarSelection();
+            editor.map!.updateStarSelection([this.starData], true);
 
             editor.updateWaypointsOnStarDeletion(this.starData);
             this.updateWormholes(true);

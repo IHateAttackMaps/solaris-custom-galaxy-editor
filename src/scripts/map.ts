@@ -791,6 +791,14 @@ class GalaxyMap extends EventEmitter {
         this.starSelection!.draw();
     }
 
+    updateStarSelection(updatedStars: Star[], removing: boolean) {
+        this.starSelection!.drawSelectedStarDelta(updatedStars, removing);
+    }
+
+    updateSelectedStarId(oldId: string, newId: string) {
+        this.starSelection!.updateSelectedStarId(oldId, newId);
+    }
+
     clearStarSelection() {
         this.starSelection!.clear();
     }

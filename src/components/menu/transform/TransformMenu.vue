@@ -397,8 +397,8 @@ export default {
             }
 
             if (this.copy.translate.enabled) {
-                this.updateAfterTransform(newStarIds);
-            } else this.updateAfterTransform(this.starIds);
+                this.updateAfterTransform(newStarIds, true);
+            } else this.updateAfterTransform(this.starIds, false);
         },
         applyRotate() {
             this.errors.length = 0;
@@ -471,8 +471,8 @@ export default {
             }
 
             if (this.copy.rotate.enabled) {
-                this.updateAfterTransform(newStarIds);
-            } else this.updateAfterTransform(this.starIds);
+                this.updateAfterTransform(newStarIds, true);
+            } else this.updateAfterTransform(this.starIds, false);
         },
         applyScale() {
             this.errors.length = 0;
@@ -503,10 +503,10 @@ export default {
             }
 
             if (this.copy.scale.enabled) {
-                this.updateAfterTransform(newStarIds);
-            } else this.updateAfterTransform(this.starIds);
+                this.updateAfterTransform(newStarIds, true);
+            } else this.updateAfterTransform(this.starIds, false);
         },
-        updateAfterTransform(starIds: Set<string>) {
+        updateAfterTransform(starIds: Set<string>, copying: boolean) {
             const affectedCarriers = helper.getStarTranslationAffectedCarriers(starIds);
 
             for (const affectedCarrier of affectedCarriers) {
@@ -526,7 +526,7 @@ export default {
             }
 
             editor.updateWormholes();
-            if (this.selection != null && this.selection.length > 0) {
+            if (this.selection != null && this.selection.length > 0 && !copying) {
                 editor.map!.drawStarSelection();
             }
         },

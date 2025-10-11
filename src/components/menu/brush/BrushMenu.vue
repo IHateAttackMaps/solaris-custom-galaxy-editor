@@ -255,7 +255,7 @@ export default {
                 useGalaxyStore().removeStar(star.id);
                 editor.deleteStar(star);
                 useMenuStateStore().removeStarFromSelection(star.id);
-                editor.map!.drawStarSelection();
+                editor.map!.updateStarSelection([star], true);
 
                 editor.updateWaypointsOnStarDeletion(star);
                 if (this.galaxy.stars.find(s => s.wormHoleToStarId === star.id) != null) { // WH existed and was removed

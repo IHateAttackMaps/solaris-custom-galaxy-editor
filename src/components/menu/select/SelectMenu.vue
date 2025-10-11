@@ -340,7 +340,7 @@ export default {
             }
 
             editor.updateWormholes();
-            editor.map!.drawStarSelection();
+            if (!e.isCopy) editor.map!.drawStarSelection();
         },
         openRandomiseMenu() {
             useMenuStateStore().toggleMenuState('randomise');

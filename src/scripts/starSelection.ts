@@ -568,6 +568,7 @@ class StarSelection extends EventEmitter {
                 } else if (this.cursorMoveFor === 'rotateSelection') {
                     this.onRotateSelectionCursorMove(newPos);
                 }
+                break;
 
         }
     }

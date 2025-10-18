@@ -1,86 +1,98 @@
 <template>
     <div class="menu-page">
-        <menu-title :title="titleText">
-            <button class="btn btn-sm me-1 btn-outline-warning title-btn"
-                v-if="selectState === 'paused' && action === 'selecting'" @click="switchSelectState()">
-                <i class="fas fa-pause me-small"></i>
-                Paused
-            </button>
-            <button class="btn btn-sm me-1 btn-outline-success title-btn"
-                v-if="selectState === 'adding' && action === 'selecting'" @click="switchSelectState()">
-                <i class="fas fa-plus"></i>
-                Adding
-            </button>
-            <button class="btn btn-sm me-1 btn-outline-danger title-btn"
-                v-if="selectState === 'removing' && action === 'selecting'" @click="switchSelectState()">
-                <i class="fas fa-xmark"></i>
-                Removing
-            </button>
-            <button class="btn btn-sm btn-outline-primary me-1 title-btn" @click="clearSelection()"
-                v-if="action === 'selecting'">
-                <i class="fas fa-undo"></i>
-                Clear
-            </button>
-        </menu-title>
-        <div class="text-warning" v-if="!functional">
-            This menu was opened before the galaxy editor could load and is non-functional.
-        </div>
+        <div class="fade-in" v-show="action !== 'filtering'">
+            <menu-title :title="titleText">
+                <button class="btn btn-sm me-1 btn-outline-warning title-btn"
+                    v-if="selectState === 'paused' && action === 'selecting'" @click="switchSelectState()">
+                    <i class="fas fa-pause me-small"></i>
+                    Paused
+                </button>
+                <button class="btn btn-sm me-1 btn-outline-success title-btn"
+                    v-if="selectState === 'adding' && action === 'selecting'" @click="switchSelectState()">
+                    <i class="fas fa-plus"></i>
+                    Adding
+                </button>
+                <button class="btn btn-sm me-1 btn-outline-danger title-btn"
+                    v-if="selectState === 'removing' && action === 'selecting'" @click="switchSelectState()">
+                    <i class="fas fa-xmark"></i>
+                    Removing
+                </button>
+                <button class="btn btn-sm btn-outline-primary me-1 title-btn" v-if="action === 'selecting'"
+                    @click="beginFiltering()">
+                    <i class="fas fa-filter"></i>
+                    Filter
+                </button>
+                <button class="btn btn-sm btn-outline-primary me-1 title-btn" @click="clearSelection()"
+                    v-if="action === 'selecting'">
+                    <i class="fas fa-undo"></i>
+                    Clear
+                </button>
+            </menu-title>
+            <div class="text-warning" v-if="!functional">
+                This menu was opened before the galaxy editor could load and is non-functional.
+            </div>
 
-        <div class="pt-2 pb-2 bg-dark-custom">
-            <div class="row tall-row">
-                <div class="col col-flex align-center">
-                    {{ selection.length }} Stars Selected
-                </div>
-                <div class="col col-auto me-2" v-if="action === 'selecting' && selection.length > 0 && canMoveStars">
-                    <button class="btn btn-sm btn-primary" title="Move selected" @click="beginSelectionMove()">
-                        <i class="fas fa-up-down-left-right"></i>
-                    </button>
-                </div>
-                <div class="col col-auto me-2" v-if="action === 'selecting' && selection.length > 0">
-                    <button class="btn btn-sm btn-primary" title="Transform selected" @click="openTransformMenu()">
-                        <i class="fas fa-arrows-spin"></i>
-                    </button>
-                </div>
-                <div class="col col-auto me-2" v-if="action === 'selecting' && selection.length > 0">
-                    <button class="btn btn-sm btn-primary" title="Randomise selected" @click="openRandomiseMenu()">
-                        <i class="fas fa-dice"></i>
-                    </button>
-                </div>
-                <div class="col col-auto" v-if="action === 'selecting' && selection.length > 0">
-                    <button class="btn btn-sm btn-danger" title="Delete selected" @click="deleteSelected()">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                <div class="col col-auto me-2" v-if="action === 'moving'">
-                    <button class="btn btn-sm btn-success" title="Confirm" @click="endSelectionMove()">
-                        <i class="fas fa-check"></i>
-                    </button>
-                </div>
-                <div class="col col-auto me-2" v-if="action === 'moving' && isCopy">
-                    <button class="btn btn-sm btn-outline-primary" :class="{ active: copyCarriers }"
-                        title="Toggle copy carriers" @click="copyCarriers = !copyCarriers">
-                        <i class="fas fa-rocket"></i>
-                    </button>
-                </div>
-                <div class="col col-auto me-2" v-if="action === 'moving'">
-                    <button class="btn btn-sm btn-outline-primary" :class="{ active: isCopy }" title="Toggle copy"
-                        @click="toggleCopy()">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                </div>
-                <div class="col col-auto me-2" v-if="action === 'moving'">
-                    <button class="btn btn-sm btn-outline-warning set-width-btn"
-                        :class="{ active: selectState === 'paused' }" title="Toggle pause" @click="togglePaused()">
-                        <i class="fas fa-pause"></i>
-                    </button>
-                </div>
-                <div class="col col-auto" v-if="action === 'moving'">
-                    <button class="btn btn-sm btn-danger" title="Cancel" @click="cancelSelectionMove()">
-                        <i class="fas fa-xmark"></i>
-                    </button>
+            <div class="pt-2 pb-2 bg-dark-custom">
+                <div class="row tall-row">
+                    <div class="col col-flex align-center">
+                        {{ selection.length }} Stars Selected
+                    </div>
+                    <div class="col col-auto me-2"
+                        v-if="action === 'selecting' && selection.length > 0 && canMoveStars">
+                        <button class="btn btn-sm btn-primary" title="Move selected" @click="beginSelectionMove()">
+                            <i class="fas fa-up-down-left-right"></i>
+                        </button>
+                    </div>
+                    <div class="col col-auto me-2" v-if="action === 'selecting' && selection.length > 0">
+                        <button class="btn btn-sm btn-primary" title="Transform selected" @click="openTransformMenu()">
+                            <i class="fas fa-arrows-spin"></i>
+                        </button>
+                    </div>
+                    <div class="col col-auto me-2" v-if="action === 'selecting' && selection.length > 0">
+                        <button class="btn btn-sm btn-primary" title="Randomise selected" @click="openRandomiseMenu()">
+                            <i class="fas fa-dice"></i>
+                        </button>
+                    </div>
+                    <div class="col col-auto" v-if="action === 'selecting' && selection.length > 0">
+                        <button class="btn btn-sm btn-danger" title="Delete selected" @click="deleteSelected()">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="col col-auto me-2" v-if="action === 'moving'">
+                        <button class="btn btn-sm btn-success" title="Confirm" @click="endSelectionMove()">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                    <div class="col col-auto me-2" v-if="action === 'moving' && isCopy">
+                        <button class="btn btn-sm btn-outline-primary" :class="{ active: copyCarriers }"
+                            title="Toggle copy carriers" @click="copyCarriers = !copyCarriers">
+                            <i class="fas fa-rocket"></i>
+                        </button>
+                    </div>
+                    <div class="col col-auto me-2" v-if="action === 'moving'">
+                        <button class="btn btn-sm btn-outline-primary" :class="{ active: isCopy }" title="Toggle copy"
+                            @click="toggleCopy()">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <div class="col col-auto me-2" v-if="action === 'moving'">
+                        <button class="btn btn-sm btn-outline-warning set-width-btn"
+                            :class="{ active: selectState === 'paused' }" title="Toggle pause" @click="togglePaused()">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                    </div>
+                    <div class="col col-auto" v-if="action === 'moving'">
+                        <button class="btn btn-sm btn-danger" title="Cancel" @click="cancelSelectionMove()">
+                            <i class="fas fa-xmark"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+        <filter-selection-menu v-if="action === 'filtering'" v-on:returnToMenu="endFiltering()">
+
+        </filter-selection-menu>
+
         <confirmation-modal modalName="deleteSelectedModal" titleText="Delete Selected" cancelText="No"
             confirmText="Yes" @onConfirm="confirmDeletion">
             <p>{{ modalText }}</p>
@@ -100,11 +112,13 @@ import ConfirmationModal from '@/components/modal/ConfirmationModal.vue';
 import { Modal } from 'bootstrap';
 import type { Location } from '@/scripts/types/Location';
 import type { Star } from '@/scripts/types/Star';
+import FilterSelectionMenu from './FilterSelectionMenu.vue';
 
 export default {
     components: {
         'menu-title': MenuTitle,
-        'confirmation-modal': ConfirmationModal
+        'confirmation-modal': ConfirmationModal,
+        'filter-selection-menu': FilterSelectionMenu
     },
     data() {
         return {
@@ -115,7 +129,7 @@ export default {
             lastSelectState: 'paused' as 'paused' | 'adding' | 'removing',
             deleteSelectedModal: null as Modal | null,
             modalText: undefined as string | undefined,
-            action: 'selecting' as 'selecting' | 'moving',
+            action: 'selecting' as 'selecting' | 'moving' | 'filtering',
             isCopy: false,
             titleText: 'Select',
             selectionMoveEndedHandler: null as any,
@@ -162,6 +176,34 @@ export default {
 
                 editor.map!.setSelectionContainerInteractivity(true);
             }
+        },
+        beginFiltering() {
+            if (!this.galaxyIsReady || !this.functional) return;
+
+            this.action = 'filtering';
+            editor.viewport!.cursor = 'default';
+
+            editor.map!.disableStarsInteractivity();
+            editor.unpauseViewport();
+
+            this.titleText = 'Filter Selection';
+
+            editor.setModeArg(1, this.action);
+        },
+        endFiltering() {
+            if (!this.galaxyIsReady || !this.functional) return;
+
+            this.action = 'selecting';
+            editor.viewport!.cursor = 'crosshair';
+
+            if (this.selectState !== 'paused') {
+                editor.map!.enableStarsInteractivity();
+                editor.pauseViewport();
+            }
+
+            this.titleText = 'Select';
+
+            editor.setModeArg(1, this.action);
         },
         clearSelection() {
             if (!this.galaxyIsReady || !this.functional) return;
@@ -385,6 +427,21 @@ export default {
 </script>
 
 <style scoped>
+.fade-in {
+    animation-name: fadeInAnimation;
+    animation-duration: .3s;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 .bg-dark-custom {
     --bs-bg-opacity: 1;
     background-color: rgb(53, 67, 74) !important;

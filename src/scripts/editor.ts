@@ -133,8 +133,8 @@ class GalaxyEditor {
         const starFieldTop = helper.calculateMinStarY() - 750;
         const starFieldBottom = helper.calculateMaxStarY() + 750;
 
-        const maxWidth = 2 * (starFieldRight - starFieldLeft);
-        const maxHeight = 2 * (starFieldBottom - starFieldTop);
+        const maxWidth = 4 * (starFieldRight - starFieldLeft);
+        const maxHeight = 4 * (starFieldBottom - starFieldTop);
 
         this.viewport!.resize(window.innerWidth, window.innerHeight, maxWidth, maxHeight);
         this.viewport!.moveCenter((starFieldLeft + starFieldRight) / 2, (starFieldTop + starFieldBottom) / 2);

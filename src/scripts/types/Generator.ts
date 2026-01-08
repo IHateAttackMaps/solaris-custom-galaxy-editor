@@ -15,7 +15,8 @@ export const GeneratorTypes = [
     { id: 'circularBalanced', name: 'Circular Balanced', requiresSeed: true, requiresStartingStars: true, requiresHyperspaceRange: true, usesLinkedLocations: true },
     { id: 'doughnut', name: 'Doughnut', requiresSeed: false, requiresStartingStars: false, requiresHyperspaceRange: false, usesLinkedLocations: false },
     { id: 'irregular', name: 'Irregular', requiresSeed: true, requiresStartingStars: true, requiresHyperspaceRange: true, usesLinkedLocations: true },
-    { id: 'spiral', name: 'Spiral', requiresSeed: true, requiresStartingStars: false, requiresHyperspaceRange: false, usesLinkedLocations: false }
+    { id: 'spiral', name: 'Spiral', requiresSeed: true, requiresStartingStars: false, requiresHyperspaceRange: false, usesLinkedLocations: false },
+    { id: 'irregularNLimit', name: 'Irregular Neighbour Limited', requiresSeed: true, requiresStartingStars: true, requiresHyperspaceRange: true, usesLinkedLocations: true }
 ] as const;
 
 export type GeneratorType = typeof GeneratorTypes[number];

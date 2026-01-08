@@ -114,6 +114,7 @@ import circularBalancedGenerator from '@/scripts/generators/circularBalanced';
 import doughnutGenerator from '@/scripts/generators/doughnut';
 import irregularGenerator from '@/scripts/generators/irregular';
 import spiralGenerator from '@/scripts/generators/spiral';
+import irregularNLimit from '@/scripts/generators/irregularNLimit';
 
 export default {
     components: {
@@ -178,6 +179,9 @@ export default {
                     break;
                 case 'spiral':
                     output = spiralGenerator.generateLocations(this.playerCount, this.starsPerPlayer, this.seed);
+                    break;
+                case 'irregularNLimit':
+                    output = irregularNLimit.generateLocations(this.playerCount, this.starsPerPlayer, this.seed, this.startingStars, this.initialHyperspaceRange);
                     break;
                 default:
                     throw new Error(`Invalid generator id!`);

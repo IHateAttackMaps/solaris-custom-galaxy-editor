@@ -86,7 +86,7 @@ class CircularBalancedMapGenerator implements MapGenerator {
         // choose home stars
 
         // The desired distance from the center is half way from the galaxy center and the edge.
-        const distanceFromCenter = helper.getMaxSelectionDiameter(locations) / 2 / 2;
+        const distanceFromCenter = helper.getMaxSelectionRadius(locations) / 2;
         let playerAngle = (sectorAngle / 2.0);//take a location from the middle of the sector
         let desiredLocation = this._getRotatedLocation({ x: 0.0, y: distanceFromCenter }, playerAngle);
         let firstHomeLocation = helper.getClosestLocations(desiredLocation, locations, 1)[0];

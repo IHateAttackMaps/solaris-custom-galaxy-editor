@@ -345,18 +345,18 @@ export default {
         getDesiredPlayerDistanceFromCenter(locations: Location[], generatorId: GeneratorType['id']) {
             let distanceFromCenter;
 
-            const diameter = helper.getMaxSelectionDiameter(locations);
+            const radius = helper.getMaxSelectionRadius(locations);
 
             // doughnut galaxies need the distance from the center needs to be slightly more than others
             // spiral galaxies need the distance to be slightly less, and they have a different galactic center
             if (generatorId === 'doughnut') {
-                distanceFromCenter = (diameter / 2) * (3 / 4);
+                distanceFromCenter = radius * (3 / 4);
             } else if (generatorId === 'spiral') {
-                distanceFromCenter = diameter / 2 / 2;
+                distanceFromCenter = radius / 2;
             } else {
                 // The desired distance from the center is on two thirds from the galaxy center and the edge
                 // for all galaxies other than doughnut and spiral.
-                distanceFromCenter = (diameter / 2) * (2 / 3);
+                distanceFromCenter = radius * (2 / 3);
             }
 
             return distanceFromCenter;

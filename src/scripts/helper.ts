@@ -929,23 +929,11 @@ class HelperService {
         return locations.find(l => this.isLocationTooClose(location, l)) != null;
     }
 
-    getMaxSelectionDiameter(locations: Location[]) {
-        // This is a more accurate approach
-        /*
-        const center = helper.calculateSelectionCentroid(locations);
-        const diameter = helper.calculateSelectionRadiusFromPoint(locations, center) * 2;
-        */
+    getMaxSelectionRadius(locations: Location[]) {
+        const center = this.calculateSelectionCentroid(locations);
+        const radius = this.calculateSelectionRadiusFromPoint(locations, center);
 
-        // This is what Solaris uses, so it will be used here as well
-        const minX = this.calculateSelectionMinX(locations);
-        const minY = this.calculateSelectionMinY(locations);
-        const maxX = this.calculateSelectionMaxX(locations);
-        const maxY = this.calculateSelectionMaxY(locations);
-        const diameterX = maxX - minX;
-        const diameterY = maxY - minY;
-        const diameter = diameterX > diameterY ? diameterX : diameterY;
-
-        return diameter;
+        return radius;
     }
 
     getClosestLocations(loc: Location, locs: Location[], amount: number): Location[] {
